@@ -32,7 +32,8 @@ class SessionRepositoryImpl @Inject constructor(
             if (parts.size != 2) return@withContext null
             val iv = Base64.decode(parts[0], Base64.NO_WRAP)
             val ciphertext = Base64.decode(parts[1], Base64.NO_WRAP)
-            val json = String(crypto.decrypt(iv, ciphertext))
+            val decryptedBytes = crypto.decrypt(iv, ciphertext) ?: return@withContext null
+            val json = String(decryptedBytes)
             parseSession(json)
         } catch (e: Exception) {
             null

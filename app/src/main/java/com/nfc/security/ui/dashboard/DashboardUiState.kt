@@ -9,5 +9,7 @@ data class DashboardUiState(
     val vpnState: VpnState = VpnState.Disconnected,
     val healthScore: SecurityHealthScore? = null,
     val freemiumState: FreemiumState = FreemiumState.Trial(7 * 24 * 60 * 60 * 1000L),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val unreadCount: Int = 0,
+    val sparklineData: List<Int> = emptyList(),
 )

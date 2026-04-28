@@ -1,6 +1,9 @@
 package com.nfc.security.ui.dashboard
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,176 +12,282 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.NearMe
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nfc.security.domain.model.FreemiumState
 import com.nfc.security.domain.model.VpnState
+import com.nfc.security.ui.components.AegisCard
+import com.nfc.security.ui.components.AegisDot
+import com.nfc.security.ui.components.AegisPill
+import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.PillTone
 import com.nfc.security.ui.navigation.NavRoutes
+import com.nfc.security.ui.theme.AegisBg
+import com.nfc.security.ui.theme.AegisAccent
+import com.nfc.security.ui.theme.AegisCrit
+import com.nfc.security.ui.theme.AegisSafe
+import com.nfc.security.ui.theme.AegisText
+import com.nfc.security.ui.theme.AegisTextDim
+import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.AegisWarn
 import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(
-    state: DashboardUiState,
-    onNavigate: (String) -> Unit
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("NFC Security") },
-                navigationIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Security,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { onNavigate(NavRoutes.SETTINGS) }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
+    val overallScore = state.healthScore?.score
+    val heroColor = when {
+        overallScore == null -> AegisAccent
+        overallScore >= 80 -> AegisSafe
+        overallScore >= 60 -> AegisWarn
+        else -> AegisCrit
+    }
+    val heroLabel = when {
+        overallScore == null -> "Scanning..."
+        overallScore >= 80 -> "SECURE"
+        overallScore >= 60 -> "AT RISK"
+        else -> "CRITICAL"
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AegisBg)
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        AegisTopBar(
+            title = "NFC Security",
+            subtitle = "Security Dashboard",
+            /*right = {
+                BadgedBox(badge = {
+                    if (state.unreadCount > 0) Badge { Text("${state.unreadCount}") }
+                }) {
+                 IconButton(onClick = { onNavigate(NavRoutes.NOTIFICATIONS) }) {
+                        Icon(
+                            Icons.Default.Notifications,
+                            contentDescription = "Notifications",
+                            tint = AegisTextDim
+                        )
                     }
                 }
-            )
+            }*/
+        )
+
+        HeroStatusCard(
+            score = overallScore,
+            heroColor = heroColor,
+            heroLabel = heroLabel,
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text("MODULES", style = AegisType.labelSmall, color = AegisTextDim)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ModuleRow(
+            icon = Icons.Default.NearMe,
+            title = "NFC Sentinel",
+            statusLabel = if (state.nfcEnabled) "Active" else "Off",
+            tone = if (state.nfcEnabled) PillTone.SAFE else PillTone.DEFAULT,
+            onClick = { onNavigate(NavRoutes.NFC_SENTINEL) }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ModuleRow(
+            icon = Icons.Default.Wifi,
+            title = "Tunnel",
+            statusLabel = when (state.vpnState) {
+                is VpnState.Connected -> "Connected"
+                is VpnState.Connecting -> "Connecting"
+                is VpnState.Disconnected -> "Off"
+                is VpnState.Error -> "Error"
+            },
+            tone = when (state.vpnState) {
+                is VpnState.Connected -> PillTone.SAFE
+                is VpnState.Connecting -> PillTone.WARN
+                else -> PillTone.DEFAULT
+            },
+            onClick = { onNavigate(NavRoutes.TUNNEL) }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ModuleRow(
+            icon = Icons.Default.Shield,
+            title = "Antimalware",
+            statusLabel = "Tap to scan",
+            tone = PillTone.ACCENT,
+            onClick = { onNavigate(NavRoutes.SCAN) }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ModuleRow(
+            icon = Icons.Default.Lock,
+            title = "Vault",
+            statusLabel = "Sealed",
+            tone = PillTone.DEFAULT,
+            onClick = { onNavigate(NavRoutes.VAULT) }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text("QUICK ACTIONS", style = AegisType.labelSmall, color = AegisTextDim)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            QuickChip("Run Scan", Modifier.weight(1f)) { onNavigate(NavRoutes.SCAN) }
+            QuickChip("Tunnel", Modifier.weight(1f)) { onNavigate(NavRoutes.TUNNEL) }
+            QuickChip("Vault", Modifier.weight(1f)) { onNavigate(NavRoutes.VAULT) }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            FreemiumBanner(state.freemiumState)
 
-            StatusCard(
-                title = "NFC Monitor",
-                value = if (state.nfcEnabled) "Active" else "Inactive",
-                valueColor = if (state.nfcEnabled) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
-                onClick = { onNavigate(NavRoutes.NFC_MONITOR) }
-            )
-
-            StatusCard(
-                title = "VPN Protection",
-                value = when (state.vpnState) {
-                    is VpnState.Connected -> "Connected"
-                    is VpnState.Connecting -> "Connecting..."
-                    is VpnState.Disconnected -> "Disconnected"
-                    is VpnState.Error -> "Error"
-                },
-                valueColor = when (state.vpnState) {
-                    is VpnState.Connected -> Color(0xFF4CAF50)
-                    is VpnState.Connecting -> Color(0xFFFFC107)
-                    else -> MaterialTheme.colorScheme.error
-                },
-                onClick = { onNavigate(NavRoutes.VPN) }
-            )
-
-            SecurityScoreCard(state = state, onClick = { onNavigate(NavRoutes.SECURITY_HEALTH) })
-
-            StatusCard(
-                title = "Cleanup & Scan",
-                value = "Tap to scan",
-                valueColor = MaterialTheme.colorScheme.primary,
-                onClick = { onNavigate(NavRoutes.CLEANUP_SCAN) }
-            )
+        if (state.sparklineData.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(16.dp))
+            ThreatSparkline(data = state.sparklineData, color = heroColor)
         }
-    }
-}
 
-@Composable
-private fun FreemiumBanner(freemiumState: FreemiumState) {
-    if (freemiumState is FreemiumState.Trial) {
-        val remaining = freemiumState.remainingMs
-        val days = TimeUnit.MILLISECONDS.toDays(remaining)
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Trial: $days day(s) remaining",
-                modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
-private fun StatusCard(
-    title: String,
-    value: String,
-    valueColor: Color,
-    onClick: () -> Unit
-) {
-    Card(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
-            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = valueColor)
-        }
-    }
-}
-
-@Composable
-private fun SecurityScoreCard(state: DashboardUiState, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text("Security Health", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
-                Spacer(modifier = Modifier.height(4.dp))
-                val score = state.healthScore?.score
+        if (state.freemiumState is FreemiumState.Trial) {
+            Spacer(modifier = Modifier.height(12.dp))
+            val days = TimeUnit.MILLISECONDS.toDays((state.freemiumState as FreemiumState.Trial).remainingMs)
+            AegisCard(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = if (score != null) "$score / 100" else "Loading...",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = when {
-                        score == null -> MaterialTheme.colorScheme.onSurfaceVariant
-                        score >= 80 -> Color(0xFF4CAF50)
-                        score >= 60 -> Color(0xFFFFC107)
-                        else -> MaterialTheme.colorScheme.error
-                    }
+                    "Trial · $days day(s) remaining",
+                    style = AegisType.bodySmall,
+                    color = AegisWarn
                 )
             }
-            if (state.isLoading || state.healthScore == null) {
-                CircularProgressIndicator(modifier = Modifier.size(32.dp))
-            } else {
-                CircularProgressIndicator(
-                    progress = { state.healthScore.score / 100f },
-                    modifier = Modifier.size(48.dp),
-                    color = when {
-                        state.healthScore.score >= 80 -> Color(0xFF4CAF50)
-                        state.healthScore.score >= 60 -> Color(0xFFFFC107)
-                        else -> MaterialTheme.colorScheme.error
-                    }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        IconButton(onClick = { onNavigate(NavRoutes.SETTINGS) }, modifier = Modifier.align(Alignment.End)) {
+            Icon(Icons.Default.Security, contentDescription = "Settings", tint = AegisTextDim)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+private fun HeroStatusCard(score: Int?, heroColor: Color, heroLabel: String) {
+    AegisCard(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text("Device Status", style = AegisType.labelSmall, color = AegisTextDim)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(heroLabel, style = AegisType.headlineLarge, color = heroColor)
+                if (score != null) {
+                    Text("Score $score / 100", style = AegisType.bodySmall, color = AegisTextDim)
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .background(heroColor.copy(alpha = 0.1f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (score != null) "$score" else "--",
+                    style = AegisType.titleLarge,
+                    color = heroColor,
+                    textAlign = TextAlign.Center
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModuleRow(
+    icon: ImageVector,
+    title: String,
+    statusLabel: String,
+    tone: PillTone,
+    onClick: () -> Unit
+) {
+    AegisCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(imageVector = icon, contentDescription = null, tint = AegisAccent, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(title, style = AegisType.titleMedium, color = AegisText)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AegisPill(label = statusLabel, tone = tone)
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = AegisTextDim, modifier = Modifier.size(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickChip(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AegisAccent.copy(alpha = 0.12f),
+            contentColor = AegisAccent
+        )
+    ) {
+        Text(label, style = AegisType.labelSmall)
+    }
+}
+
+@Composable
+private fun ThreatSparkline(data: List<Int>, color: Color) {
+    Column {
+        Text("THREAT ACTIVITY · 24H", style = AegisType.labelSmall, color = AegisTextDim)
+        Spacer(modifier = Modifier.height(8.dp))
+        AegisCard(modifier = Modifier.fillMaxWidth()) {
+            Canvas(modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)) {
+                if (data.isEmpty()) return@Canvas
+                val maxVal = data.max().takeIf { it > 0 } ?: 1
+                val stepX = size.width / (data.size - 1).coerceAtLeast(1)
+                val path = Path()
+                data.forEachIndexed { i, v ->
+                    val x = i * stepX
+                    val y = size.height - (v.toFloat() / maxVal) * size.height
+                    if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                }
+                drawPath(path, color = color, style = Stroke(width = 2.dp.toPx()))
+                data.forEachIndexed { i, v ->
+                    val x = i * stepX
+                    val y = size.height - (v.toFloat() / maxVal) * size.height
+                    if (v > 0) drawCircle(color = color, radius = 3.dp.toPx(), center = Offset(x, y))
+                }
             }
         }
     }

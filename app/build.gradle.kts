@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.nfc.security"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -61,6 +61,13 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.biometric)
     implementation(libs.play.integrity)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.datastore.prefs)
+    implementation(libs.billing.ktx)
+    implementation(libs.compose.google.fonts)
+    implementation(libs.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

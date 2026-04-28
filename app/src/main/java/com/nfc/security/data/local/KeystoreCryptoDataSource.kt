@@ -2,8 +2,10 @@ package com.nfc.security.data.local
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Log
 import java.security.KeyStore
 import java.security.MessageDigest
+import javax.crypto.AEADBadTagException
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
@@ -67,11 +69,19 @@ class KeystoreCryptoDataSource @Inject constructor() {
         return Pair(iv, ciphertext)
     }
 
-    fun decrypt(iv: ByteArray, ciphertext: ByteArray): ByteArray {
-        val cipher = Cipher.getInstance(AES_TRANSFORMATION)
-        val spec = GCMParameterSpec(GCM_TAG_LENGTH, iv)
-        cipher.init(Cipher.DECRYPT_MODE, getOrCreateAesKey(), spec)
-        return cipher.doFinal(ciphertext)
+    fun decrypt(iv: ByteArray, ciphertext: ByteArray): ByteArray? {
+        return try {
+            val cipher = Cipher.getInstance(AES_TRANSFORMATION)
+            val spec = GCMParameterSpec(GCM_TAG_LENGTH, iv)
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateAesKey(), spec)
+            cipher.doFinal(ciphertext)
+        } catch (e: AEADBadTagException) {
+            Log.e("KeystoreCryptoDataSource", "Decryption failed: AEADBadTagException", e)
+            null
+        } catch (e: Exception) {
+            Log.e("KeystoreCryptoDataSource", "Decryption failed", e)
+            null
+        }
     }
 
     fun sign(data: ByteArray): ByteArray {
