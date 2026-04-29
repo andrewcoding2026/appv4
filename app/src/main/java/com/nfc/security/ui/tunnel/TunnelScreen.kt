@@ -141,7 +141,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
 
         AegisCard(modifier = Modifier.fillMaxWidth()) {
             Text(
-                "Aegis runs a local VPN. Your IP address and country do not change.",
+                "NFC Security runs a local VPN. Your IP address and country do not change.",
                 style = AegisType.bodySmall,
                 color = AegisTextDim,
                 textAlign = TextAlign.Center,

@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.nfc.security.MainActivity
-import com.nfc.security.R
 import javax.inject.Inject
 import javax.inject.Singleton
 

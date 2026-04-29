@@ -1,14 +1,7 @@
 package com.nfc.security.domain.usecase.nfc
 
 import android.nfc.Tag
-import android.nfc.tech.IsoDep
-import android.nfc.tech.MifareClassic
-import android.nfc.tech.MifareUltralight
 import android.nfc.tech.Ndef
-import android.nfc.tech.NfcA
-import android.nfc.tech.NfcB
-import android.nfc.tech.NfcF
-import android.nfc.tech.NfcV
 import com.nfc.security.domain.model.NdefRecordInfo
 import com.nfc.security.domain.model.NfcTagInfo
 import com.nfc.security.domain.model.NfcTagType
@@ -49,17 +42,26 @@ class ParseNfcTagUseCase @Inject constructor() {
             val message = ndef.ndefMessage
             ndef.close()
             message?.records?.map { record ->
-                val payloadText = if (record.tnf == android.nfc.NdefRecord.TNF_WELL_KNOWN &&
-                    record.type.contentEquals(android.nfc.NdefRecord.RTD_TEXT) &&
-                    record.payload.isNotEmpty()
-                ) {
-                    val languageCodeLength = record.payload[0].toInt() and 0x3F
-                    String(record.payload, 1 + languageCodeLength, record.payload.size - 1 - languageCodeLength, Charsets.UTF_8)
-                } else if (record.tnf == android.nfc.NdefRecord.TNF_WELL_KNOWN &&
-                    record.type.contentEquals(android.nfc.NdefRecord.RTD_URI)
-                ) {
-                    record.toUri()?.toString()
-                } else null
+                val payloadText = when (record.tnf) {
+                    android.nfc.NdefRecord.TNF_WELL_KNOWN if record.type.contentEquals(android.nfc.NdefRecord.RTD_TEXT) &&
+                            record.payload.isNotEmpty()
+                        -> {
+                        val languageCodeLength = record.payload[0].toInt() and 0x3F
+                        String(
+                            record.payload,
+                            1 + languageCodeLength,
+                            record.payload.size - 1 - languageCodeLength,
+                            Charsets.UTF_8
+                        )
+                    }
+
+                    android.nfc.NdefRecord.TNF_WELL_KNOWN if record.type.contentEquals(android.nfc.NdefRecord.RTD_URI)
+                        -> {
+                        record.toUri()?.toString()
+                    }
+
+                    else -> null
+                }
                 NdefRecordInfo(
                     tnf = record.tnf,
                     type = record.type ?: ByteArray(0),

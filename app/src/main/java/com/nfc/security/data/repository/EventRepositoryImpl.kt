@@ -3,7 +3,6 @@ package com.nfc.security.data.repository
 import com.nfc.security.data.db.EventDao
 import com.nfc.security.data.db.EventEntity
 import com.nfc.security.domain.repository.EventRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class EventRepositoryImpl @Inject constructor(
