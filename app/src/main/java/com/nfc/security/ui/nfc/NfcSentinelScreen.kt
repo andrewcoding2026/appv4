@@ -29,17 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.nfc.security.domain.model.NfcTagInfo
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisTextFaint
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityTextFaint
+import com.nfc.security.ui.theme.NFCSecurityType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -49,16 +48,16 @@ fun NfcSentinelScreen(state: NfcMonitorUiState, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
     ) {
-        AegisTopBar(title = "NFC Sentinel", subtitle = "Real-time monitoring", onBack = onBack)
+        NFCSecurityTopBar(title = "NFC Sentinel", subtitle = "Real-time monitoring", onBack = onBack)
 
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
             Spacer(modifier = Modifier.height(16.dp))
             PulsingRings(active = state.isNfcEnabled)
             Spacer(modifier = Modifier.height(16.dp))
-            AegisPill(
+            NFCSecurityPill(
                 label = when {
                     !state.isNfcEnabled -> "NFC Disabled"
                     state.lastTag != null -> "Tag Detected"
@@ -73,15 +72,15 @@ fun NfcSentinelScreen(state: NfcMonitorUiState, onBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = if (state.isNfcEnabled) "Monitoring NFC field" else "Enable NFC in device settings",
-                style = AegisType.bodySmall,
-                color = AegisTextDim
+                style = NFCSecurityType.bodySmall,
+                color = NFCSecurityTextDim
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         if (state.tagHistory.isNotEmpty()) {
-            Text("RECENT TAGS", style = AegisType.labelSmall, color = AegisTextDim)
+            Text("RECENT TAGS", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
             Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(state.tagHistory) { tag ->
@@ -90,7 +89,7 @@ fun NfcSentinelScreen(state: NfcMonitorUiState, onBack: () -> Unit) {
             }
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No tags discovered yet", style = AegisType.bodyMedium, color = AegisTextFaint)
+                Text("No tags discovered yet", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextFaint)
             }
         }
     }
@@ -122,7 +121,7 @@ private fun PulsingRings(active: Boolean) {
         modifier = Modifier.size(160.dp),
         contentAlignment = Alignment.Center
     ) {
-        val ringColor = if (active) AegisSafe else AegisTextFaint
+        val ringColor = if (active) NFCSecuritySafe else NFCSecurityTextFaint
         Canvas(modifier = Modifier.size(160.dp)) {
             for (i in 1..3) {
                 val radius = (size.minDimension / 2) * scale * (i / 3f)
@@ -132,14 +131,14 @@ private fun PulsingRings(active: Boolean) {
                     style = Stroke(width = 1.5.dp.toPx())
                 )
             }
-            drawCircle(color = if (active) AegisSafe else AegisTextFaint, radius = 24.dp.toPx())
+            drawCircle(color = if (active) NFCSecuritySafe else NFCSecurityTextFaint, radius = 24.dp.toPx())
         }
     }
 }
 
 @Composable
 private fun TagRow(tag: NfcTagInfo) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -148,24 +147,24 @@ private fun TagRow(tag: NfcTagInfo) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = tag.techList.firstOrNull() ?: "Unknown",
-                    style = AegisType.titleMedium,
-                    color = AegisText
+                    style = NFCSecurityType.titleMedium,
+                    color = NFCSecurityText
                 )
                 Text(
                     text = tag.ndefRecords.firstOrNull()?.payloadText ?: "ID: ${tag.id}",
-                    style = AegisType.bodySmall,
-                    color = AegisTextDim,
+                    style = NFCSecurityType.bodySmall,
+                    color = NFCSecurityTextDim,
                     maxLines = 1
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column(horizontalAlignment = Alignment.End) {
-                AegisPill(label = tag.type::class.simpleName ?: "Tag", tone = PillTone.ACCENT)
+                NFCSecurityPill(label = tag.type::class.simpleName ?: "Tag", tone = PillTone.ACCENT)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(tag.discoveredAt)),
-                    style = AegisType.labelSmall,
-                    color = AegisTextFaint
+                    style = NFCSecurityType.labelSmall,
+                    color = NFCSecurityTextFaint
                 )
             }
         }

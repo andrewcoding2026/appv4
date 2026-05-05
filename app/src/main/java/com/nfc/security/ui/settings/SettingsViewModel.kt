@@ -2,7 +2,7 @@ package com.nfc.security.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nfc.security.data.datastore.AegisPreferences
+import com.nfc.security.data.datastore.NFCSecurityPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val prefs: AegisPreferences,
+    private val prefs: NFCSecurityPreferences,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -56,11 +56,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setNfcEnabled(v: Boolean) = toggle(AegisPreferences.Keys.MODULE_NFC_ENABLED, v)
-    fun setVpnEnabled(v: Boolean) = toggle(AegisPreferences.Keys.MODULE_VPN_ENABLED, v)
-    fun setScanEnabled(v: Boolean) = toggle(AegisPreferences.Keys.MODULE_SCAN_ENABLED, v)
-    fun setVaultEnabled(v: Boolean) = toggle(AegisPreferences.Keys.MODULE_VAULT_ENABLED, v)
-    fun setIntegrityEnabled(v: Boolean) = toggle(AegisPreferences.Keys.MODULE_INTEGRITY_ENABLED, v)
+    fun setNfcEnabled(v: Boolean) = toggle(NFCSecurityPreferences.Keys.MODULE_NFC_ENABLED, v)
+    fun setVpnEnabled(v: Boolean) = toggle(NFCSecurityPreferences.Keys.MODULE_VPN_ENABLED, v)
+    fun setScanEnabled(v: Boolean) = toggle(NFCSecurityPreferences.Keys.MODULE_SCAN_ENABLED, v)
+    fun setVaultEnabled(v: Boolean) = toggle(NFCSecurityPreferences.Keys.MODULE_VAULT_ENABLED, v)
+    fun setIntegrityEnabled(v: Boolean) = toggle(NFCSecurityPreferences.Keys.MODULE_INTEGRITY_ENABLED, v)
 
     private fun toggle(key: androidx.datastore.preferences.core.Preferences.Key<Boolean>, v: Boolean) {
         viewModelScope.launch { prefs.setModuleEnabled(key, v) }

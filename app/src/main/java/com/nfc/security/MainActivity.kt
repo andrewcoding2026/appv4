@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.nfc.security.data.datastore.AegisPreferences
+import com.nfc.security.data.datastore.NFCSecurityPreferences
 import com.nfc.security.domain.repository.FreemiumRepository
 import com.nfc.security.service.NfcForegroundDispatchManager
 import com.nfc.security.ui.navigation.AppNavGraph
 import com.nfc.security.ui.navigation.NavRoutes
 import com.nfc.security.ui.nfc.NfcMonitorViewModel
-import com.nfc.security.ui.theme.AegisTheme
+import com.nfc.security.ui.theme.NFCSecurityTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var freemiumRepository: FreemiumRepository
 
     @Inject
-    lateinit var aegisPreferences: AegisPreferences
+    lateinit var securityPreferences: NFCSecurityPreferences
 
     private var nfcMonitorViewModel: NfcMonitorViewModel? = null
 
@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch { freemiumRepository.initTrialIfNeeded() }
 
-        val onboardingComplete = runBlocking { aegisPreferences.onboardingComplete.first() }
+        val onboardingComplete = runBlocking { securityPreferences.onboardingComplete.first() }
         val startDestination = if (onboardingComplete) NavRoutes.DASHBOARD else NavRoutes.ONBOARDING
 
         enableEdgeToEdge()
         setContent {
-            AegisTheme {
+            NFCSecurityTheme {
                 val navController = rememberNavController()
                 nfcMonitorViewModel = hiltViewModel()
                 AppNavGraph(navController = navController, startDestination = startDestination)

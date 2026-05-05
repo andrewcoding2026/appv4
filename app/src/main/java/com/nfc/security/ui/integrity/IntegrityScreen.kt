@@ -30,19 +30,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfc.security.domain.model.SecurityCheckResult
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisDot
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityDot
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -59,38 +59,38 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
         else -> "FAIL"
     }
     val verdictColor = when (verdict) {
-        "PASS" -> AegisSafe
-        "WARN" -> AegisWarn
-        "FAIL" -> AegisCrit
-        else -> AegisAccent
+        "PASS" -> NFCSecuritySafe
+        "WARN" -> NFCSecurityWarn
+        "FAIL" -> NFCSecurityCrit
+        else -> NFCSecurityAccent
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
     ) {
-        AegisTopBar(title = "Integrity", subtitle = "Device security daemon", onBack = onBack)
+        NFCSecurityTopBar(title = "Integrity", subtitle = "Device security daemon", onBack = onBack)
 
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
-                    Text("Verdict", style = AegisType.labelSmall, color = AegisTextDim)
+                    Text("Verdict", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
                     if (state.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.size(24.dp), color = AegisAccent)
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp), color = NFCSecurityAccent)
                     } else {
-                        Text(verdict, style = AegisType.headlineLarge, color = verdictColor)
+                        Text(verdict, style = NFCSecurityType.headlineLarge, color = verdictColor)
                     }
                     if (score != null) {
                         Text(
                             SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(Date(score.calculatedAt)),
-                            style = AegisType.bodySmall,
-                            color = AegisTextDim
+                            style = NFCSecurityType.bodySmall,
+                            color = NFCSecurityTextDim
                         )
                     }
                 }
@@ -102,7 +102,7 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
                 ) {
                     Text(
                         text = if (scoreValue != null) "$scoreValue" else "--",
-                        style = AegisType.titleLarge,
+                        style = NFCSecurityType.titleLarge,
                         color = verdictColor,
                         textAlign = TextAlign.Center
                     )
@@ -115,7 +115,7 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
         Button(
             onClick = viewModel::auditNow,
             enabled = !state.isLoading,
-            colors = ButtonDefaults.buttonColors(containerColor = AegisAccent),
+            colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent),
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
@@ -124,7 +124,7 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("CHECKS", style = AegisType.labelSmall, color = AegisTextDim)
+        Text("CHECKS", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (score != null) {
@@ -135,7 +135,7 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
             }
         } else if (!state.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Tap 'Audit Now' to run checks", style = AegisType.bodyMedium, color = AegisTextDim)
+                Text("Tap 'Audit Now' to run checks", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim)
             }
         }
     }
@@ -144,10 +144,10 @@ fun IntegrityScreen(viewModel: IntegrityViewModel, onBack: () -> Unit) {
 @Composable
 private fun CheckRow(check: SecurityCheckResult) {
     val dotColor = when {
-        check.passed -> AegisSafe
-        check.severity.name == "CRITICAL" -> AegisCrit
-        check.severity.name == "HIGH" -> AegisWarn
-        else -> AegisTextDim
+        check.passed -> NFCSecuritySafe
+        check.severity.name == "CRITICAL" -> NFCSecurityCrit
+        check.severity.name == "HIGH" -> NFCSecurityWarn
+        else -> NFCSecurityTextDim
     }
     val tone = when {
         check.passed -> PillTone.SAFE
@@ -155,23 +155,23 @@ private fun CheckRow(check: SecurityCheckResult) {
         check.severity.name == "HIGH" -> PillTone.WARN
         else -> PillTone.DEFAULT
     }
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                AegisDot(color = dotColor)
+                NFCSecurityDot(color = dotColor)
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(check.checkName, style = AegisType.titleMedium, color = AegisText)
+                    Text(check.checkName, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
                     if (check.detail.isNotBlank()) {
-                        Text(check.detail, style = AegisType.bodySmall, color = AegisTextDim)
+                        Text(check.detail, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                     }
                 }
             }
-            AegisPill(if (check.passed) "Pass" else "Fail", tone = tone)
+            NFCSecurityPill(if (check.passed) "Pass" else "Fail", tone = tone)
         }
     }
 }

@@ -11,7 +11,7 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
-import com.nfc.security.data.datastore.AegisPreferences
+import com.nfc.security.data.datastore.NFCSecurityPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 @Singleton
 class BillingRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val prefs: AegisPreferences,
+    private val prefs: NFCSecurityPreferences,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -67,11 +67,11 @@ class BillingRepository @Inject constructor(
     private fun queryProducts() {
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId("aegis_pro_monthly")
+                .setProductId("NFCSecurity_pro_monthly")
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build(),
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId("aegis_pro_yearly")
+                .setProductId("NFCSecurity_pro_yearly")
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build()
         )
@@ -88,7 +88,7 @@ class BillingRepository @Inject constructor(
         billingClient.queryPurchasesAsync(params) { _, purchases ->
             val hasPro = purchases.any { p ->
                 p.purchaseState == Purchase.PurchaseState.PURCHASED &&
-                    p.products.any { it.startsWith("aegis_pro") }
+                    p.products.any { it.startsWith("NFCSecurity_pro") }
             }
             _isPro.value = hasPro
             if (hasPro) scope.launch { prefs.setEntitlement("pro") }

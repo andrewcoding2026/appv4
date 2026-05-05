@@ -28,18 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfc.security.data.db.EventEntity
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisDot
-import com.nfc.security.ui.components.AegisTopBar
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisTextFaint
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityDot
+import com.nfc.security.ui.components.NFCSecurityTopBar
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityTextFaint
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -56,15 +56,15 @@ fun NotificationsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
     ) {
-        AegisTopBar(
+        NFCSecurityTopBar(
             title = "Notifications",
             onBack = onBack,
             right = {
                 IconButton(onClick = viewModel::markAllRead) {
-                    Icon(Icons.Default.DoneAll, contentDescription = "Mark all read", tint = AegisTextDim)
+                    Icon(Icons.Default.DoneAll, contentDescription = "Mark all read", tint = NFCSecurityTextDim)
                 }
             }
         )
@@ -74,11 +74,11 @@ fun NotificationsScreen(
                 FilterChip(
                     selected = filter == f,
                     onClick = { viewModel.setFilter(f) },
-                    label = { Text(f.name, style = AegisType.labelSmall) },
+                    label = { Text(f.name, style = NFCSecurityType.labelSmall) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = AegisAccent.copy(alpha = 0.15f),
-                        selectedLabelColor = AegisAccent,
-                        labelColor = AegisTextDim
+                        selectedContainerColor = NFCSecurityAccent.copy(alpha = 0.15f),
+                        selectedLabelColor = NFCSecurityAccent,
+                        labelColor = NFCSecurityTextDim
                     )
                 )
             }
@@ -88,7 +88,7 @@ fun NotificationsScreen(
 
         if (events.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No notifications", style = AegisType.bodyMedium, color = AegisTextFaint)
+                Text("No notifications", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextFaint)
             }
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -103,14 +103,14 @@ fun NotificationsScreen(
 @Composable
 private fun EventRow(event: EventEntity, onClick: () -> Unit) {
     val dotColor = when (event.severity) {
-        "crit"  -> AegisCrit
-        "warn"  -> AegisWarn
-        "safe"  -> AegisSafe
-        else    -> AegisAccent
+        "crit"  -> NFCSecurityCrit
+        "warn"  -> NFCSecurityWarn
+        "safe"  -> NFCSecuritySafe
+        else    -> NFCSecurityAccent
     }
-    AegisCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AegisDot(color = dotColor)
+            NFCSecurityDot(color = dotColor)
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(
@@ -119,22 +119,22 @@ private fun EventRow(event: EventEntity, onClick: () -> Unit) {
                 ) {
                     Text(
                         event.module.uppercase(),
-                        style = AegisType.labelSmall,
-                        color = AegisTextDim
+                        style = NFCSecurityType.labelSmall,
+                        color = NFCSecurityTextDim
                     )
                     Text(
                         formatTime(event.createdAt),
-                        style = AegisType.labelSmall,
-                        color = AegisTextFaint
+                        style = NFCSecurityType.labelSmall,
+                        color = NFCSecurityTextFaint
                     )
                 }
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(event.title, style = AegisType.titleMedium, color = AegisText)
+                Text(event.title, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
                 if (event.body.isNotBlank()) {
                     Text(
                         event.body,
-                        style = AegisType.bodySmall,
-                        color = AegisTextDim,
+                        style = NFCSecurityType.bodySmall,
+                        color = NFCSecurityTextDim,
                         maxLines = 2
                     )
                 }

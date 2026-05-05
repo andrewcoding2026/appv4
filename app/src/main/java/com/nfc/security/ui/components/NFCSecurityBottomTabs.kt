@@ -24,13 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisBorder
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisTextFaint
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityBorder
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityTextFaint
+import com.nfc.security.ui.theme.NFCSecurityType
 
-enum class AegisTab(val label: String, val icon: ImageVector, val route: String) {
+enum class NFCSecurityTab(val label: String, val icon: ImageVector, val route: String) {
     HOME("Home", Icons.Default.Home, "dashboard"),
     TUNNEL("Tunnel", Icons.Default.Wifi, "tunnel"),
     SCAN("Scan", Icons.Default.Shield, "scan"),
@@ -39,17 +39,17 @@ enum class AegisTab(val label: String, val icon: ImageVector, val route: String)
 }
 
 @Composable
-fun AegisBottomTabs(activeRoute: String, onTabSelected: (String) -> Unit) {
+fun NFCSecurityBottomTabs(activeRoute: String, onTabSelected: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(AegisBorder)
+                .background(NFCSecurityBorder)
         )
         Row(
             modifier = Modifier
@@ -57,7 +57,7 @@ fun AegisBottomTabs(activeRoute: String, onTabSelected: (String) -> Unit) {
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            AegisTab.entries.forEach { tab ->
+            NFCSecurityTab.entries.forEach { tab ->
                 val isActive = activeRoute == tab.route
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,21 +68,21 @@ fun AegisBottomTabs(activeRoute: String, onTabSelected: (String) -> Unit) {
                     Icon(
                         imageVector = tab.icon,
                         contentDescription = tab.label,
-                        tint = if (isActive) AegisAccent else AegisTextFaint,
+                        tint = if (isActive) NFCSecurityAccent else NFCSecurityTextFaint,
                         modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = tab.label,
-                        style = AegisType.labelSmall,
-                        color = if (isActive) AegisAccent else AegisTextFaint
+                        style = NFCSecurityType.labelSmall,
+                        color = if (isActive) NFCSecurityAccent else NFCSecurityTextFaint
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     if (isActive) {
                         Box(
                             modifier = Modifier
                                 .size(4.dp)
-                                .background(AegisAccent, androidx.compose.foundation.shape.CircleShape)
+                                .background(NFCSecurityAccent, androidx.compose.foundation.shape.CircleShape)
                         )
                     } else {
                         Spacer(modifier = Modifier.size(4.dp))

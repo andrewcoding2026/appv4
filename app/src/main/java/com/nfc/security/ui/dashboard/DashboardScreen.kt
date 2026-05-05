@@ -20,12 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NearMe
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,30 +40,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nfc.security.domain.model.FreemiumState
 import com.nfc.security.domain.model.VpnState
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisDot
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
 import com.nfc.security.ui.navigation.NavRoutes
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 import java.util.concurrent.TimeUnit
 
 @Composable
 fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
     val overallScore = state.healthScore?.score
     val heroColor = when {
-        overallScore == null -> AegisAccent
-        overallScore >= 80 -> AegisSafe
-        overallScore >= 60 -> AegisWarn
-        else -> AegisCrit
+        overallScore == null -> NFCSecurityAccent
+        overallScore >= 80 -> NFCSecuritySafe
+        overallScore >= 60 -> NFCSecurityWarn
+        else -> NFCSecurityCrit
     }
     val heroLabel = when {
         overallScore == null -> "Scanning..."
@@ -78,26 +74,13 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        AegisTopBar(
+        NFCSecurityTopBar(
             title = "NFC Security",
             subtitle = "Security Dashboard",
-            /*right = {
-                BadgedBox(badge = {
-                    if (state.unreadCount > 0) Badge { Text("${state.unreadCount}") }
-                }) {
-                 IconButton(onClick = { onNavigate(NavRoutes.NOTIFICATIONS) }) {
-                        Icon(
-                            Icons.Default.Notifications,
-                            contentDescription = "Notifications",
-                            tint = AegisTextDim
-                        )
-                    }
-                }
-            }*/
         )
 
         HeroStatusCard(
@@ -108,7 +91,7 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("MODULES", style = AegisType.labelSmall, color = AegisTextDim)
+        Text("MODULES", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
 
         ModuleRow(
@@ -154,7 +137,7 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("QUICK ACTIONS", style = AegisType.labelSmall, color = AegisTextDim)
+        Text("QUICK ACTIONS", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             QuickChip("Run Scan", Modifier.weight(1f)) { onNavigate(NavRoutes.SCAN) }
@@ -170,11 +153,11 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
         if (state.freemiumState is FreemiumState.Trial) {
             Spacer(modifier = Modifier.height(12.dp))
             val days = TimeUnit.MILLISECONDS.toDays((state.freemiumState as FreemiumState.Trial).remainingMs)
-            AegisCard(modifier = Modifier.fillMaxWidth()) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     "Trial · $days day(s) remaining",
-                    style = AegisType.bodySmall,
-                    color = AegisWarn
+                    style = NFCSecurityType.bodySmall,
+                    color = NFCSecurityWarn
                 )
             }
         }
@@ -182,7 +165,7 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         IconButton(onClick = { onNavigate(NavRoutes.SETTINGS) }, modifier = Modifier.align(Alignment.End)) {
-            Icon(Icons.Default.Security, contentDescription = "Settings", tint = AegisTextDim)
+            Icon(Icons.Default.Security, contentDescription = "Settings", tint = NFCSecurityTextDim)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -191,18 +174,18 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
 
 @Composable
 private fun HeroStatusCard(score: Int?, heroColor: Color, heroLabel: String) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text("Device Status", style = AegisType.labelSmall, color = AegisTextDim)
+                Text("Device Status", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(heroLabel, style = AegisType.headlineLarge, color = heroColor)
+                Text(heroLabel, style = NFCSecurityType.headlineLarge, color = heroColor)
                 if (score != null) {
-                    Text("Score $score / 100", style = AegisType.bodySmall, color = AegisTextDim)
+                    Text("Score $score / 100", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                 }
             }
             Box(
@@ -213,7 +196,7 @@ private fun HeroStatusCard(score: Int?, heroColor: Color, heroLabel: String) {
             ) {
                 Text(
                     text = if (score != null) "$score" else "--",
-                    style = AegisType.titleLarge,
+                    style = NFCSecurityType.titleLarge,
                     color = heroColor,
                     textAlign = TextAlign.Center
                 )
@@ -230,21 +213,21 @@ private fun ModuleRow(
     tone: PillTone,
     onClick: () -> Unit
 ) {
-    AegisCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = icon, contentDescription = null, tint = AegisAccent, modifier = Modifier.size(20.dp))
+                Icon(imageVector = icon, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(title, style = AegisType.titleMedium, color = AegisText)
+                Text(title, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AegisPill(label = statusLabel, tone = tone)
+                NFCSecurityPill(label = statusLabel, tone = tone)
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = AegisTextDim, modifier = Modifier.size(16.dp))
+                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = NFCSecurityTextDim, modifier = Modifier.size(16.dp))
             }
         }
     }
@@ -256,20 +239,20 @@ private fun QuickChip(label: String, modifier: Modifier = Modifier, onClick: () 
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = AegisAccent.copy(alpha = 0.12f),
-            contentColor = AegisAccent
+            containerColor = NFCSecurityAccent.copy(alpha = 0.12f),
+            contentColor = NFCSecurityAccent
         )
     ) {
-        Text(label, style = AegisType.labelSmall)
+        Text(label, style = NFCSecurityType.labelSmall)
     }
 }
 
 @Composable
 private fun ThreatSparkline(data: List<Int>, color: Color) {
     Column {
-        Text("THREAT ACTIVITY · 24H", style = AegisType.labelSmall, color = AegisTextDim)
+        Text("THREAT ACTIVITY · 24H", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Canvas(modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)) {

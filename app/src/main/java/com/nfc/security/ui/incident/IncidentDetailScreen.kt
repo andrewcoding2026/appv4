@@ -31,17 +31,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,11 +61,11 @@ fun IncidentDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
     ) {
         val event = state.event
-        AegisTopBar(
+        NFCSecurityTopBar(
             title = event?.module?.uppercase() ?: "Incident",
             subtitle = "Incident Detail",
             onBack = onBack
@@ -73,23 +73,23 @@ fun IncidentDetailScreen(
 
         if (state.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = AegisCrit)
+                CircularProgressIndicator(color = NFCSecurityCrit)
             }
             return@Column
         }
 
         if (event == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Event not found", style = AegisType.bodyMedium, color = AegisTextDim)
+                Text("Event not found", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim)
             }
             return@Column
         }
 
         val severityColor = when (event.severity) {
-            "crit" -> AegisCrit
-            "warn" -> AegisWarn
-            "safe" -> AegisSafe
-            else   -> AegisCrit
+            "crit" -> NFCSecurityCrit
+            "warn" -> NFCSecurityWarn
+            "safe" -> NFCSecuritySafe
+            else   -> NFCSecurityCrit
         }
         val tone = when (event.severity) {
             "crit" -> PillTone.CRIT
@@ -99,30 +99,30 @@ fun IncidentDetailScreen(
         }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            AegisCard(modifier = Modifier.fillMaxWidth()) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Column {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AegisPill(label = event.severity.uppercase(), tone = tone)
+                        NFCSecurityPill(label = event.severity.uppercase(), tone = tone)
                         Text(
                             SimpleDateFormat("MMM d, HH:mm:ss", Locale.getDefault()).format(Date(event.createdAt)),
-                            style = AegisType.labelSmall,
-                            color = AegisTextDim
+                            style = NFCSecurityType.labelSmall,
+                            color = NFCSecurityTextDim
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(event.title, style = AegisType.titleLarge, color = severityColor)
+                    Text(event.title, style = NFCSecurityType.titleLarge, color = severityColor)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(event.body, style = AegisType.bodyMedium, color = AegisText)
+                    Text(event.body, style = NFCSecurityType.bodyMedium, color = NFCSecurityText)
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AegisCard(modifier = Modifier.fillMaxWidth()) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     DetailRow("Module", event.module)
                     DetailRow("Severity", event.severity)
@@ -139,12 +139,12 @@ fun IncidentDetailScreen(
                     onClick = {
                         val share = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, "Aegis Incident\n\n${event.title}\n${event.body}\n\nModule: ${event.module}\nSeverity: ${event.severity}")
+                            putExtra(Intent.EXTRA_TEXT, "NFCSecurity Incident\n\n${event.title}\n${event.body}\n\nModule: ${event.module}\nSeverity: ${event.severity}")
                         }
                         context.startActivity(Intent.createChooser(share, "Export Evidence"))
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = AegisCrit.copy(alpha = 0.15f), contentColor = AegisCrit)
+                    colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityCrit.copy(alpha = 0.15f), contentColor = NFCSecurityCrit)
                 ) {
                     Icon(Icons.Default.Share, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -166,7 +166,7 @@ fun IncidentDetailScreen(
 @Composable
 private fun DetailRow(label: String, value: String) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, style = AegisType.labelSmall, color = AegisTextDim)
-        Text(value, style = AegisType.bodySmall, color = AegisText, modifier = Modifier.padding(start = 8.dp))
+        Text(label, style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+        Text(value, style = NFCSecurityType.bodySmall, color = NFCSecurityText, modifier = Modifier.padding(start = 8.dp))
     }
 }

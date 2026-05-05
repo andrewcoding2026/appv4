@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -37,19 +35,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import com.nfc.security.domain.model.MalwareHit
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisTextFaint
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityTextFaint
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 
 @Composable
 fun ScanScreen(
@@ -62,10 +60,10 @@ fun ScanScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
     ) {
-        AegisTopBar(title = "Antimalware", subtitle = "Package & file scan", onBack = onBack)
+        NFCSecurityTopBar(title = "Antimalware", subtitle = "Package & file scan", onBack = onBack)
 
         Column(
             modifier = Modifier
@@ -75,13 +73,13 @@ fun ScanScreen(
             if (state.isScanning) {
                 ScanBeamAnimation()
                 Spacer(modifier = Modifier.height(12.dp))
-                AegisCard(modifier = Modifier.fillMaxWidth()) {
-                    Text("Scanning installed packages and files...", style = AegisType.bodyMedium, color = AegisTextDim)
+                NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
+                    Text("Scanning installed packages and files...", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim)
                 }
             } else {
                 val report = state.report
                 if (report != null) {
-                    AegisCard(modifier = Modifier.fillMaxWidth()) {
+                    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                             StatItem("Scanned Apps", "${report.scannedApps}")
                             StatItem("Scanned Files", "${report.scannedFiles}")
@@ -90,15 +88,15 @@ fun ScanScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     if (report.hits.isEmpty()) {
-                        AegisCard(modifier = Modifier.fillMaxWidth()) {
+                        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                AegisPill("Clean", PillTone.SAFE)
+                                NFCSecurityPill("Clean", PillTone.SAFE)
                                 Spacer(modifier = Modifier.width(12.dp))
-                                Text("No threats found", style = AegisType.bodyMedium, color = AegisSafe)
+                                Text("No threats found", style = NFCSecurityType.bodyMedium, color = NFCSecuritySafe)
                             }
                         }
                     } else {
-                        Text("FINDINGS", style = AegisType.labelSmall, color = AegisCrit)
+                        Text("FINDINGS", style = NFCSecurityType.labelSmall, color = NFCSecurityCrit)
                         Spacer(modifier = Modifier.height(8.dp))
                         report.hits.forEach { hit ->
                             HitRow(hit = hit)
@@ -112,17 +110,17 @@ fun ScanScreen(
                             .height(160.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Tap 'Start Scan' to begin", style = AegisType.bodyMedium, color = AegisTextFaint)
+                        Text("Tap 'Start Scan' to begin", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextFaint)
                     }
                 }
 
                 if (state.clearedBytes != null) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    AegisCard(modifier = Modifier.fillMaxWidth(), onClick = onDismissClearedNotice) {
+                    NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onDismissClearedNotice) {
                         Text(
                             "Cache cleared — ${state.clearedBytes / 1024}KB freed",
-                            style = AegisType.bodySmall,
-                            color = AegisSafe
+                            style = NFCSecurityType.bodySmall,
+                            color = NFCSecuritySafe
                         )
                     }
                 }
@@ -135,7 +133,7 @@ fun ScanScreen(
                 onClick = onStartScan,
                 enabled = !state.isScanning,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+                colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(4.dp))
@@ -144,7 +142,7 @@ fun ScanScreen(
             Button(
                 onClick = onClearCache,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = AegisWarn.copy(alpha = 0.2f), contentColor = AegisWarn)
+                colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityWarn.copy(alpha = 0.2f), contentColor = NFCSecurityWarn)
             ) {
                 Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(4.dp))
@@ -172,13 +170,13 @@ private fun ScanBeamAnimation() {
         .height(80.dp)) {
         val y = progress * size.height
         drawLine(
-            color = AegisAccent.copy(alpha = 0.8f),
+            color = NFCSecurityAccent.copy(alpha = 0.8f),
             start = Offset(0f, y),
             end = Offset(size.width, y),
             strokeWidth = 2.dp.toPx()
         )
         drawLine(
-            color = AegisAccent.copy(alpha = 0.2f),
+            color = NFCSecurityAccent.copy(alpha = 0.2f),
             start = Offset(0f, (y - 20.dp.toPx()).coerceAtLeast(0f)),
             end = Offset(size.width, (y - 20.dp.toPx()).coerceAtLeast(0f)),
             strokeWidth = 8.dp.toPx()
@@ -189,25 +187,25 @@ private fun ScanBeamAnimation() {
 @Composable
 private fun StatItem(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, style = AegisType.titleLarge, color = AegisText)
-        Text(label, style = AegisType.labelSmall, color = AegisTextDim)
+        Text(value, style = NFCSecurityType.titleLarge, color = NFCSecurityText)
+        Text(label, style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
     }
 }
 
 @Composable
 private fun HitRow(hit: MalwareHit) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(hit.packageNameOrPath, style = AegisType.titleMedium, color = AegisText)
-                Text(hit.detail, style = AegisType.bodySmall, color = AegisTextDim)
+                Text(hit.packageNameOrPath, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
+                Text(hit.detail, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            AegisPill(hit.hitType.name, PillTone.CRIT)
+            NFCSecurityPill(hit.hitType.name, PillTone.CRIT)
         }
     }
 }

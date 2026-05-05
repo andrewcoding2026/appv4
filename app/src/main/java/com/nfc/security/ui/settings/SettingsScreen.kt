@@ -29,15 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfc.security.BuildConfig
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisTopBar
-import com.nfc.security.ui.components.AegisToggleRow
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityTopBar
+import com.nfc.security.ui.components.NFCSecurityToggleRow
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 
 @Composable
 fun SettingsScreen(
@@ -50,32 +50,32 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        AegisTopBar(title = "Settings", onBack = onBack)
+        NFCSecurityTopBar(title = "Settings", onBack = onBack)
 
         SettingsSection("MODULES")
-        AegisToggleRow("NFC Sentinel", "Monitor NFC field for threats", Icons.Default.NearMe, state.moduleNfc, viewModel::setNfcEnabled)
+        NFCSecurityToggleRow("NFC Sentinel", "Monitor NFC field for threats", Icons.Default.NearMe, state.moduleNfc, viewModel::setNfcEnabled)
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow("Tunnel", "Local DNS VPN protection", Icons.Default.Wifi, state.moduleVpn, viewModel::setVpnEnabled)
+        NFCSecurityToggleRow("Tunnel", "Local DNS VPN protection", Icons.Default.Wifi, state.moduleVpn, viewModel::setVpnEnabled)
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow("Antimalware", "Package and file scanning", Icons.Default.Shield, state.moduleScan, viewModel::setScanEnabled)
+        NFCSecurityToggleRow("Antimalware", "Package and file scanning", Icons.Default.Shield, state.moduleScan, viewModel::setScanEnabled)
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow("Vault", "Encrypted secret storage", Icons.Default.Lock, state.moduleVault, viewModel::setVaultEnabled)
+        NFCSecurityToggleRow("Vault", "Encrypted secret storage", Icons.Default.Lock, state.moduleVault, viewModel::setVaultEnabled)
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow("Integrity", "Continuous device health checks", Icons.Default.Security, state.moduleIntegrity, viewModel::setIntegrityEnabled)
+        NFCSecurityToggleRow("Integrity", "Continuous device health checks", Icons.Default.Security, state.moduleIntegrity, viewModel::setIntegrityEnabled)
 
         Spacer(modifier = Modifier.height(16.dp))
         SettingsSection("UPDATES")
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
-            Text("Updates delivered via Google Play", style = AegisType.bodySmall, color = AegisTextDim)
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
+            Text("Updates delivered via Google Play", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         SettingsSection("ABOUT")
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 DetailRow("Version", "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 DetailRow("Package", BuildConfig.APPLICATION_ID)
@@ -89,7 +89,7 @@ fun SettingsScreen(
         Button(
             onClick = onNavigateToIntegrity,
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+            colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
         ) {
             Text("Run Integrity Audit Now")
         }
@@ -100,8 +100,8 @@ fun SettingsScreen(
             onClick = viewModel::clearAll,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = AegisCrit.copy(alpha = 0.15f),
-                contentColor = AegisCrit
+                containerColor = NFCSecurityCrit.copy(alpha = 0.15f),
+                contentColor = NFCSecurityCrit
             )
         ) {
             Icon(Icons.Default.Delete, contentDescription = null)
@@ -115,7 +115,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsSection(title: String) {
-    Text(title, style = AegisType.labelSmall, color = AegisTextDim)
+    Text(title, style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
     Spacer(modifier = Modifier.height(8.dp))
 }
 
@@ -125,7 +125,7 @@ private fun DetailRow(label: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, style = AegisType.bodySmall, color = AegisTextDim)
-        Text(value, style = AegisType.bodySmall, color = AegisText)
+        Text(label, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
+        Text(value, style = NFCSecurityType.bodySmall, color = NFCSecurityText)
     }
 }

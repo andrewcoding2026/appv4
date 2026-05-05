@@ -17,11 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 
 @Composable
-fun AegisTopBar(
+fun NFCSecurityTopBar(
     title: String,
     subtitle: String? = null,
     onBack: (() -> Unit)? = null,
@@ -50,11 +50,11 @@ fun AegisTopBar(
                 if (subtitle != null) {
                     Text(
                         text = subtitle.uppercase(),
-                        style = AegisType.labelSmall,
-                        color = AegisTextDim
+                        style = NFCSecurityType.labelSmall,
+                        color = NFCSecurityTextDim
                     )
                 }
-                Text(text = title, style = AegisType.titleLarge)
+                Text(text = title, style = NFCSecurityType.titleLarge)
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically, content = right)

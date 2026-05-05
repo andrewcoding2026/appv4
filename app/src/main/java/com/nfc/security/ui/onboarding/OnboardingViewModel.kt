@@ -2,7 +2,7 @@ package com.nfc.security.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nfc.security.data.datastore.AegisPreferences
+import com.nfc.security.data.datastore.NFCSecurityPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val prefs: AegisPreferences
+    private val prefs: NFCSecurityPreferences
 ) : ViewModel() {
 
     private val _page = MutableStateFlow(0)

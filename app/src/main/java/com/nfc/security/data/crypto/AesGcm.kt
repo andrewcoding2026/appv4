@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AesGcm @Inject constructor() {
-    private val keyAlias = "aegis_vault_v1"
+    private val keyAlias = "nfc_security_vault_v1"
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").also { it.load(null) }
 
     private fun getOrCreateKey(): SecretKey {

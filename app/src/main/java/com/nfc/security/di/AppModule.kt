@@ -10,7 +10,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import com.nfc.security.data.db.AegisDatabase
+import com.nfc.security.data.db.NFCSecurityDatabase
 import com.nfc.security.data.db.EventDao
 import com.nfc.security.data.db.VaultItemDao
 import dagger.Module
@@ -20,7 +20,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "aegis_prefs")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "NFCSecurity_prefs")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -55,14 +55,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAegisDatabase(@ApplicationContext context: Context): AegisDatabase =
-        Room.databaseBuilder(context, AegisDatabase::class.java, "aegis.db").build()
+    fun provideNFCSecurityDatabase(@ApplicationContext context: Context): NFCSecurityDatabase =
+        Room.databaseBuilder(context, NFCSecurityDatabase::class.java, "NFCSecurity.db").build()
 
     @Provides
     @Singleton
-    fun provideEventDao(db: AegisDatabase): EventDao = db.eventDao()
+    fun provideEventDao(db: NFCSecurityDatabase): EventDao = db.eventDao()
 
     @Provides
     @Singleton
-    fun provideVaultItemDao(db: AegisDatabase): VaultItemDao = db.vaultItemDao()
+    fun provideVaultItemDao(db: NFCSecurityDatabase): VaultItemDao = db.vaultItemDao()
 }

@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AegisPreferences @Inject constructor(
+class NFCSecurityPreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     object Keys {

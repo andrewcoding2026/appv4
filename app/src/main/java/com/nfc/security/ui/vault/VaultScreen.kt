@@ -52,18 +52,18 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfc.security.data.db.VaultItemEntity
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisSurface
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecuritySurface
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 import kotlin.OptIn
 
 @Composable
@@ -112,11 +112,11 @@ fun VaultScreen(viewModel: VaultViewModel, onBack: () -> Unit) {
 
         is VaultUiState.Error -> {
             Column(
-                modifier = Modifier.fillMaxSize().background(AegisBg).padding(16.dp),
+                modifier = Modifier.fillMaxSize().background(NFCSecurityBg).padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(s.message, color = AegisCrit, style = AegisType.bodyMedium)
+                Text(s.message, color = NFCSecurityCrit, style = NFCSecurityType.bodyMedium)
             }
         }
     }
@@ -127,29 +127,29 @@ private fun LockedView(isUnlocking: Boolean, onUnlock: () -> Unit, onBack: () ->
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AegisTopBar(title = "Vault", onBack = onBack)
+        NFCSecurityTopBar(title = "Vault", onBack = onBack)
         Spacer(modifier = Modifier.weight(1f))
         Box(
             modifier = Modifier
                 .size(96.dp)
-                .background(AegisAccent.copy(alpha = 0.1f), CircleShape),
+                .background(NFCSecurityAccent.copy(alpha = 0.1f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.Lock, contentDescription = null, tint = AegisAccent, modifier = Modifier.size(48.dp))
+            Icon(Icons.Default.Lock, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(48.dp))
         }
         Spacer(modifier = Modifier.height(24.dp))
-        Text("Vault is Sealed", style = AegisType.titleLarge)
+        Text("Vault is Sealed", style = NFCSecurityType.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Use biometrics to access your encrypted items.", style = AegisType.bodySmall, color = AegisTextDim)
+        Text("Use biometrics to access your encrypted items.", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = onUnlock,
             enabled = !isUnlocking,
-            colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+            colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
         ) {
             Icon(Icons.Default.LockOpen, contentDescription = null, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(8.dp))
@@ -170,41 +170,41 @@ private fun UnlockedView(
     var showAddDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = AegisBg,
+        containerColor = NFCSecurityBg,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = AegisAccent,
-                contentColor = AegisBg
+                containerColor = NFCSecurityAccent,
+                contentColor = NFCSecurityBg
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add item")
             }
         },
         topBar = {
-            AegisTopBar(
+            NFCSecurityTopBar(
                 title = "Vault",
                 subtitle = "${items.size} items",
                 onBack = onBack,
                 right = {
                     IconButton(onClick = onLock) {
-                        Icon(Icons.Default.Lock, contentDescription = "Lock vault", tint = AegisTextDim)
+                        Icon(Icons.Default.Lock, contentDescription = "Lock vault", tint = NFCSecurityTextDim)
                     }
                 }
             )
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).padding(horizontal = 16.dp)) {
-            AegisCard(modifier = Modifier.fillMaxWidth()) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.LockOpen, contentDescription = null, tint = AegisSafe, modifier = Modifier.size(16.dp))
+                    Icon(Icons.Default.LockOpen, contentDescription = null, tint = NFCSecuritySafe, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Vault unlocked · AES-256-GCM", style = AegisType.bodySmall, color = AegisSafe)
+                    Text("Vault unlocked · AES-256-GCM", style = NFCSecurityType.bodySmall, color = NFCSecuritySafe)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
             if (items.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No items yet. Tap + to add.", style = AegisType.bodyMedium, color = AegisTextDim)
+                    Text("No items yet. Tap + to add.", style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim)
                 }
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -229,7 +229,7 @@ private fun UnlockedView(
 
 @Composable
 private fun VaultItemRow(item: VaultItemEntity, onDelete: () -> Unit) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -243,17 +243,17 @@ private fun VaultItemRow(item: VaultItemEntity, onDelete: () -> Unit) {
                         else       -> Icons.Default.Key
                     },
                     contentDescription = null,
-                    tint = AegisAccent,
+                    tint = NFCSecurityAccent,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(item.label, style = AegisType.titleMedium, color = AegisText)
-                    AegisPill(label = item.type, tone = PillTone.ACCENT)
+                    Text(item.label, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
+                    NFCSecurityPill(label = item.type, tone = PillTone.ACCENT)
                 }
             }
             IconButton(onClick = onDelete) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = AegisCrit)
+                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = NFCSecurityCrit)
             }
         }
     }
@@ -270,8 +270,8 @@ private fun AddItemDialog(onConfirm: (String, String, String) -> Unit, onDismiss
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = AegisSurface,
-        title = { Text("Add Vault Item", color = AegisText) },
+        containerColor = NFCSecuritySurface,
+        title = { Text("Add Vault Item", color = NFCSecurityText) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
@@ -306,11 +306,11 @@ private fun AddItemDialog(onConfirm: (String, String, String) -> Unit, onDismiss
         confirmButton = {
             Button(
                 onClick = { if (label.isNotBlank() && secret.isNotBlank()) onConfirm(label, type, secret) },
-                colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+                colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) { Text("Save") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel", color = AegisTextDim) }
+            TextButton(onClick = onDismiss) { Text("Cancel", color = NFCSecurityTextDim) }
         }
     )
 }

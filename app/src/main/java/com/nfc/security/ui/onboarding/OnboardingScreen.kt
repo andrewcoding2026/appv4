@@ -37,13 +37,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisBorder
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityBorder
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 
 @Composable
 fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
@@ -57,7 +57,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -94,7 +94,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
                 OutlinedButton(
                     onClick = viewModel::onPrev,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AegisTextDim)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = NFCSecurityTextDim)
                 ) {
                     Text("Back")
                 }
@@ -108,7 +108,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
                     }
                 },
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+                colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) {
                 Text(if (page < viewModel.totalPages - 1) "Next" else "Get Started")
             }
@@ -123,24 +123,24 @@ private fun WelcomePage() {
         Box(
             modifier = Modifier
                 .size(96.dp)
-                .background(AegisAccent.copy(alpha = 0.1f), CircleShape),
+                .background(NFCSecurityAccent.copy(alpha = 0.1f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Shield,
                 contentDescription = null,
-                tint = AegisAccent,
+                tint = NFCSecurityAccent,
                 modifier = Modifier.size(48.dp)
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Welcome to NFC Security", style = AegisType.headlineLarge, textAlign = TextAlign.Center)
+        Text("Welcome to NFC Security", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Your always-on mobile security guardian. " +
                 "NFC protection, encrypted vault, VPN tunnel, and integrity monitoring — all offline.",
-            style = AegisType.bodyMedium,
-            color = AegisTextDim,
+            style = NFCSecurityType.bodyMedium,
+            color = NFCSecurityTextDim,
             textAlign = TextAlign.Center
         )
     }
@@ -149,7 +149,7 @@ private fun WelcomePage() {
 @Composable
 private fun HowItWorksPage() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("How NFC Security Works", style = AegisType.headlineLarge, textAlign = TextAlign.Center)
+        Text("How NFC Security Works", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(32.dp))
         listOf(
             Triple(Icons.Default.NearMe, "NFC Sentinel", "Detects skimmers and rogue NFC interactions in real time."),
@@ -165,13 +165,13 @@ private fun HowItWorksPage() {
 
 @Composable
 private fun ModuleCard(icon: ImageVector, title: String, desc: String) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = null, tint = AegisAccent, modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.size(12.dp))
             Column {
-                Text(title, style = AegisType.titleMedium, color = AegisText)
-                Text(desc, style = AegisType.bodySmall, color = AegisTextDim)
+                Text(title, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
+                Text(desc, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
             }
         }
     }
@@ -180,11 +180,11 @@ private fun ModuleCard(icon: ImageVector, title: String, desc: String) {
 @Composable
 private fun PermissionsPage(onRequestVpn: () -> Unit, onRequestNotifications: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Permissions", style = AegisType.headlineLarge, textAlign = TextAlign.Center)
+        Text("Permissions", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Aegis needs a few permissions to protect your device.",
-            style = AegisType.bodyMedium, color = AegisTextDim, textAlign = TextAlign.Center
+            "NFCSecurity needs a few permissions to protect your device.",
+            style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         listOf(
@@ -200,23 +200,23 @@ private fun PermissionsPage(onRequestVpn: () -> Unit, onRequestNotifications: ()
 
 @Composable
 private fun PermissionRow(title: String, desc: String, onGrant: (() -> Unit)?) {
-    AegisCard(modifier = Modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, style = AegisType.titleMedium, color = AegisText)
-                Text(desc, style = AegisType.bodySmall, color = AegisTextDim)
+                Text(title, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
+                Text(desc, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
             }
             if (onGrant != null) {
                 Button(
                     onClick = onGrant,
-                    colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+                    colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
                 ) { Text("Allow") }
             } else {
-                Text("Auto", style = AegisType.bodySmall, color = AegisTextDim)
+                Text("Auto", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
             }
         }
     }
@@ -230,7 +230,7 @@ private fun PageIndicator(current: Int, total: Int) {
                 modifier = Modifier
                     .size(if (index == current) 20.dp else 6.dp, 6.dp)
                     .background(
-                        if (index == current) AegisAccent else AegisBorder,
+                        if (index == current) NFCSecurityAccent else NFCSecurityBorder,
                         CircleShape
                     )
             )

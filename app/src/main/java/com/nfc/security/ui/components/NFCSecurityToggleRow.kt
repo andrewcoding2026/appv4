@@ -14,14 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisSurface
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecuritySurface
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 
 @Composable
-fun AegisToggleRow(
+fun NFCSecurityToggleRow(
     title: String,
     description: String? = null,
     icon: ImageVector? = null,
@@ -29,7 +29,7 @@ fun AegisToggleRow(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AegisCard(modifier = modifier.fillMaxWidth()) {
+    NFCSecurityCard(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -38,15 +38,15 @@ fun AegisToggleRow(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = AegisAccent,
+                    tint = NFCSecurityAccent,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
             }
             androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = AegisType.titleMedium, color = AegisText)
+                Text(text = title, style = NFCSecurityType.titleMedium, color = NFCSecurityText)
                 if (description != null) {
-                    Text(text = description, style = AegisType.bodySmall, color = AegisTextDim)
+                    Text(text = description, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                 }
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -54,8 +54,8 @@ fun AegisToggleRow(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = AegisSurface,
-                    checkedTrackColor = AegisAccent,
+                    checkedThumbColor = NFCSecuritySurface,
+                    checkedTrackColor = NFCSecurityAccent,
                 )
             )
         }

@@ -35,18 +35,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfc.security.domain.model.VpnState
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisTopBar
-import com.nfc.security.ui.components.AegisToggleRow
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisCrit
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisTextFaint
-import com.nfc.security.ui.theme.AegisType
-import com.nfc.security.ui.theme.AegisWarn
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityTopBar
+import com.nfc.security.ui.components.NFCSecurityToggleRow
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecurityCrit
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityTextFaint
+import com.nfc.security.ui.theme.NFCSecurityType
+import com.nfc.security.ui.theme.NFCSecurityWarn
 import com.nfc.security.ui.vpn.VpnEvent
 
 @Composable
@@ -70,16 +70,16 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        AegisTopBar(title = "Tunnel", subtitle = "Local VPN", onBack = onBack)
+        NFCSecurityTopBar(title = "Tunnel", subtitle = "Local VPN", onBack = onBack)
 
         val statusColor = when (state.vpnState) {
-            is VpnState.Connected -> AegisSafe
-            is VpnState.Connecting -> AegisWarn
-            else -> AegisCrit
+            is VpnState.Connected -> NFCSecuritySafe
+            is VpnState.Connecting -> NFCSecurityWarn
+            else -> NFCSecurityCrit
         }
         val statusText = when (state.vpnState) {
             is VpnState.Connected -> "CONNECTED"
@@ -88,7 +88,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
             is VpnState.Error -> "ERROR"
         }
 
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
@@ -97,25 +97,25 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     if (state.isLoading) {
-                        CircularProgressIndicator(color = AegisAccent, modifier = Modifier.size(40.dp))
+                        CircularProgressIndicator(color = NFCSecurityAccent, modifier = Modifier.size(40.dp))
                     } else {
-                        Text(statusText[0].toString(), style = AegisType.headlineLarge, color = statusColor)
+                        Text(statusText[0].toString(), style = NFCSecurityType.headlineLarge, color = statusColor)
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(statusText, style = AegisType.titleLarge, color = statusColor)
+                Text(statusText, style = NFCSecurityType.titleLarge, color = statusColor)
 
                 if (state.vpnState is VpnState.Connected) {
                     val conn = state.vpnState as VpnState.Connected
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("↓ ${formatBytes(conn.bytesIn)}", style = AegisType.labelSmall, color = AegisTextDim)
-                            Text("IN", style = AegisType.labelSmall, color = AegisTextFaint)
+                            Text("↓ ${formatBytes(conn.bytesIn)}", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+                            Text("IN", style = NFCSecurityType.labelSmall, color = NFCSecurityTextFaint)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("↑ ${formatBytes(conn.bytesOut)}", style = AegisType.labelSmall, color = AegisTextDim)
-                            Text("OUT", style = AegisType.labelSmall, color = AegisTextFaint)
+                            Text("↑ ${formatBytes(conn.bytesOut)}", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+                            Text("OUT", style = NFCSecurityType.labelSmall, color = NFCSecurityTextFaint)
                         }
                     }
                 }
@@ -129,7 +129,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
                     },
                     enabled = !state.isLoading,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (state.vpnState is VpnState.Connected) AegisCrit else AegisAccent
+                        containerColor = if (state.vpnState is VpnState.Connected) NFCSecurityCrit else NFCSecurityAccent
                     )
                 ) {
                     Text(if (state.vpnState is VpnState.Connected) "Disconnect" else "Connect")
@@ -139,21 +139,21 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        AegisCard(modifier = Modifier.fillMaxWidth()) {
+        NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Text(
                 "NFC Security runs a local VPN. Your IP address and country do not change.",
-                style = AegisType.bodySmall,
-                color = AegisTextDim,
+                style = NFCSecurityType.bodySmall,
+                color = NFCSecurityTextDim,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("FILTERS", style = AegisType.labelSmall, color = AegisTextDim)
+        Text("FILTERS", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
 
-        AegisToggleRow(
+        NFCSecurityToggleRow(
             title = "DNS Filter",
             description = "Block malicious domains via local DNS",
             icon = Icons.Default.Dns,
@@ -161,7 +161,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
             onCheckedChange = viewModel::setDnsFilter
         )
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow(
+        NFCSecurityToggleRow(
             title = "Tracker Block",
             description = "Block known tracking domains",
             icon = Icons.Default.Block,
@@ -169,7 +169,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
             onCheckedChange = viewModel::setTrackerBlock
         )
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow(
+        NFCSecurityToggleRow(
             title = "Kill Switch",
             description = "Block traffic when VPN is off",
             icon = Icons.Default.Security,
@@ -177,7 +177,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
             onCheckedChange = viewModel::setKillSwitch
         )
         Spacer(modifier = Modifier.height(8.dp))
-        AegisToggleRow(
+        NFCSecurityToggleRow(
             title = "Wi-Fi Guard",
             description = "Auto-connect on untrusted networks",
             icon = Icons.Default.Wifi,
@@ -187,11 +187,11 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
 
         if (state.blockedCount > 0) {
             Spacer(modifier = Modifier.height(16.dp))
-            AegisCard(modifier = Modifier.fillMaxWidth()) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     "${state.blockedCount} domains blocked",
-                    style = AegisType.titleMedium,
-                    color = AegisText
+                    style = NFCSecurityType.titleMedium,
+                    color = NFCSecurityText
                 )
             }
         }

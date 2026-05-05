@@ -30,7 +30,7 @@ val JetBrainsMono = FontFamily(
     Font(googleFont = JetBrainsMonoFont, fontProvider = provider, weight = FontWeight.SemiBold),
 )
 
-val AegisType = androidx.compose.material3.Typography(
+val NFCSecurityType = androidx.compose.material3.Typography(
     headlineLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.ExtraBold,

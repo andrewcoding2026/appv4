@@ -1,8 +1,5 @@
 package com.nfc.security.ui.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.nfc.security.domain.model.FreemiumState
-import com.nfc.security.ui.components.AegisBottomTabs
+import com.nfc.security.ui.components.NFCSecurityBottomTabs
 import com.nfc.security.ui.dashboard.DashboardScreen
 import com.nfc.security.ui.dashboard.DashboardViewModel
 import com.nfc.security.ui.freemium.PaywallScreen
@@ -51,7 +48,7 @@ fun AppNavGraph(navController: NavHostController, startDestination: String) {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                AegisBottomTabs(
+                NFCSecurityBottomTabs(
                     activeRoute = currentRoute ?: NavRoutes.DASHBOARD,
                     onTabSelected = { route ->
                         navController.navigate(route) {

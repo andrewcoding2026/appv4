@@ -29,16 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nfc.security.domain.model.FreemiumState
-import com.nfc.security.ui.components.AegisCard
-import com.nfc.security.ui.components.AegisPill
-import com.nfc.security.ui.components.AegisTopBar
+import com.nfc.security.ui.components.NFCSecurityCard
+import com.nfc.security.ui.components.NFCSecurityPill
+import com.nfc.security.ui.components.NFCSecurityTopBar
 import com.nfc.security.ui.components.PillTone
-import com.nfc.security.ui.theme.AegisBg
-import com.nfc.security.ui.theme.AegisAccent
-import com.nfc.security.ui.theme.AegisSafe
-import com.nfc.security.ui.theme.AegisText
-import com.nfc.security.ui.theme.AegisTextDim
-import com.nfc.security.ui.theme.AegisType
+import com.nfc.security.ui.theme.NFCSecurityBg
+import com.nfc.security.ui.theme.NFCSecurityAccent
+import com.nfc.security.ui.theme.NFCSecuritySafe
+import com.nfc.security.ui.theme.NFCSecurityText
+import com.nfc.security.ui.theme.NFCSecurityTextDim
+import com.nfc.security.ui.theme.NFCSecurityType
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -46,28 +46,28 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AegisBg)
+            .background(NFCSecurityBg)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AegisTopBar(title = "Aegis Pro", subtitle = "Unlock full protection")
+        NFCSecurityTopBar(title = "NFCSecurity Pro", subtitle = "Unlock full protection")
 
-        Icon(Icons.Default.Shield, contentDescription = null, tint = AegisAccent, modifier = Modifier.size(64.dp))
+        Icon(Icons.Default.Shield, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(64.dp))
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Go Pro", style = AegisType.headlineLarge, textAlign = TextAlign.Center)
+        Text("Go Pro", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Unlimited access to all Aegis security modules.",
-            style = AegisType.bodyMedium,
-            color = AegisTextDim,
+            "Unlimited access to all NFCSecurity security modules.",
+            style = NFCSecurityType.bodyMedium,
+            color = NFCSecurityTextDim,
             textAlign = TextAlign.Center
         )
 
         if (state.freemiumState is FreemiumState.Trial) {
             Spacer(modifier = Modifier.height(12.dp))
             val days = TimeUnit.MILLISECONDS.toDays((state.freemiumState as FreemiumState.Trial).remainingMs)
-            AegisPill("$days days remaining", PillTone.WARN)
+            NFCSecurityPill("$days days remaining", PillTone.WARN)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -84,9 +84,9 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
             ) {
-                Icon(Icons.Default.Check, contentDescription = null, tint = AegisSafe, modifier = Modifier.size(16.dp))
+                Icon(Icons.Default.Check, contentDescription = null, tint = NFCSecuritySafe, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(feature, style = AegisType.bodyMedium, color = AegisText)
+                Text(feature, style = NFCSecurityType.bodyMedium, color = NFCSecurityText)
             }
         }
 
@@ -96,17 +96,17 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
             "Monthly" to "$2.99 / month",
             "Yearly" to "$19.99 / year  · Best value"
         ).forEach { (label, price) ->
-            AegisCard(modifier = Modifier.fillMaxWidth(), onClick = onUnlockPremium) {
+            NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onUnlockPremium) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text(label, style = AegisType.titleMedium)
-                        Text(price, style = AegisType.bodySmall, color = AegisTextDim)
+                        Text(label, style = NFCSecurityType.titleMedium)
+                        Text(price, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                     }
-                    AegisPill("Select", PillTone.ACCENT)
+                    NFCSecurityPill("Select", PillTone.ACCENT)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -115,22 +115,22 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.isUnlocking) {
-            CircularProgressIndicator(color = AegisAccent)
+            CircularProgressIndicator(color = NFCSecurityAccent)
         } else {
             Button(
                 onClick = onUnlockPremium,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = AegisAccent)
+                colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) {
                 Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Unlock Aegis Pro")
+                Text("Unlock NFCSecurity Pro")
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = { }) {
-            Text("Restore Purchases", style = AegisType.bodySmall, color = AegisTextDim)
+            Text("Restore Purchases", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
         }
         Spacer(modifier = Modifier.height(16.dp))
     }

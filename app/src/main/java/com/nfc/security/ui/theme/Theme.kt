@@ -4,30 +4,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-private val AegisColorScheme = darkColorScheme(
-    primary           = AegisAccent,
-    onPrimary         = AegisBg,
-    primaryContainer  = AegisAccentSoft,
-    onPrimaryContainer = AegisAccent,
-    secondary         = AegisTextDim,
-    onSecondary       = AegisBg,
-    background        = AegisBg,
-    onBackground      = AegisText,
-    surface           = AegisSurface,
-    onSurface         = AegisText,
-    surfaceVariant    = AegisSurfaceAlt,
-    onSurfaceVariant  = AegisTextDim,
-    outline           = AegisBorder,
-    outlineVariant    = AegisBorderHi,
-    error             = AegisCrit,
-    onError           = AegisBg,
+private val NFCSecurityColorScheme = darkColorScheme(
+    primary           = NFCSecurityAccent,
+    onPrimary         = NFCSecurityBg,
+    primaryContainer  = NFCSecurityAccentSoft,
+    onPrimaryContainer = NFCSecurityAccent,
+    secondary         = NFCSecurityTextDim,
+    onSecondary       = NFCSecurityBg,
+    background        = NFCSecurityBg,
+    onBackground      = NFCSecurityText,
+    surface           = NFCSecuritySurface,
+    onSurface         = NFCSecurityText,
+    surfaceVariant    = NFCSecuritySurfaceAlt,
+    onSurfaceVariant  = NFCSecurityTextDim,
+    outline           = NFCSecurityBorder,
+    outlineVariant    = NFCSecurityBorderHi,
+    error             = NFCSecurityCrit,
+    onError           = NFCSecurityBg,
 )
 
 @Composable
-fun AegisTheme(content: @Composable () -> Unit) {
+fun NFCSecurityTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = AegisColorScheme,
-        typography = AegisType,
+        colorScheme = NFCSecurityColorScheme,
+        typography = NFCSecurityType,
         content = content
     )
 }

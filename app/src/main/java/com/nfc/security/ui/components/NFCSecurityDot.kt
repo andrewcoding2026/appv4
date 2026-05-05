@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AegisDot(color: Color, size: Dp = 8.dp) {
+fun NFCSecurityDot(color: Color, size: Dp = 8.dp) {
     Box(
         modifier = Modifier
             .size(size)

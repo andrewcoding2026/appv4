@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = false
 )
-abstract class AegisDatabase : RoomDatabase() {
+abstract class NFCSecurityDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
     abstract fun vaultItemDao(): VaultItemDao
 }

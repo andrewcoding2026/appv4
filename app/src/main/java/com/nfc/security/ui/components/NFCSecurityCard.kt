@@ -11,24 +11,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.nfc.security.ui.theme.AegisBorder
-import com.nfc.security.ui.theme.AegisSurface
+import com.nfc.security.ui.theme.NFCSecurityBorder
+import com.nfc.security.ui.theme.NFCSecuritySurface
 
-val AegisCardShape = RoundedCornerShape(14.dp)
+val NFCSecurityCardShape = RoundedCornerShape(14.dp)
 
 @Composable
-fun AegisCard(
+fun NFCSecurityCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
         modifier = modifier
-            .clip(AegisCardShape)
+            .clip(NFCSecurityCardShape)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
-        shape = AegisCardShape,
-        color = AegisSurface,
-        border = BorderStroke(1.dp, AegisBorder)
+        shape = NFCSecurityCardShape,
+        color = NFCSecuritySurface,
+        border = BorderStroke(1.dp, NFCSecurityBorder)
     ) {
         Column(modifier = Modifier.padding(16.dp), content = content)
     }
