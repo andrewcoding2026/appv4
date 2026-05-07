@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.nfc.security"
+    namespace = "com.nfcsecurity"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.nfc.security"
+        applicationId = "com.nfcsecurity"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

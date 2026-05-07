@@ -1,4 +1,4 @@
-# Add project specific ProGuard rules here.
+﻿# Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #
@@ -12,7 +12,7 @@
 #   public *;
 #}
 
--keep class com.nfc.security.** { *; }
+-keep class com.nfcsecurity.** { *; }
 -keep class dagger.hilt.** { *; }
 -keep class javax.inject.** { *; }
 -keep class * extends androidx.work.Worker
