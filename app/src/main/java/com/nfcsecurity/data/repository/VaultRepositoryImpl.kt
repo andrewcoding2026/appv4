@@ -1,10 +1,11 @@
-﻿package com.nfcsecurity.data.repository
+package com.nfcsecurity.data.repository
 
 import com.nfcsecurity.data.crypto.AesGcm
 import com.nfcsecurity.data.db.VaultItemDao
 import com.nfcsecurity.data.db.VaultItemEntity
 import com.nfcsecurity.domain.repository.VaultRepository
 import kotlinx.coroutines.flow.Flow
+import javax.crypto.Cipher
 import javax.inject.Inject
 
 class VaultRepositoryImpl @Inject constructor(
@@ -14,8 +15,8 @@ class VaultRepositoryImpl @Inject constructor(
 
     override fun observeAll(): Flow<List<VaultItemEntity>> = dao.observeAll()
 
-    override suspend fun addItem(label: String, type: String, plaintext: ByteArray): Long {
-        val (ciphertext, iv) = aesGcm.encrypt(plaintext)
+    override suspend fun addItem(label: String, type: String, plaintext: ByteArray, encryptCipher: Cipher): Long {
+        val (ciphertext, iv) = aesGcm.encryptWithCipher(encryptCipher, plaintext)
         val now = System.currentTimeMillis()
         return dao.insert(
             VaultItemEntity(
@@ -31,8 +32,8 @@ class VaultRepositoryImpl @Inject constructor(
 
     override suspend fun deleteItem(id: Long) { dao.deleteById(id) }
 
-    override suspend fun decryptItem(id: Long): ByteArray? {
+    override suspend fun decryptItem(id: Long, decryptCipher: Cipher): ByteArray? {
         val item = dao.getById(id) ?: return null
-        return aesGcm.decrypt(item.ciphertext, item.iv)
+        return aesGcm.decryptWithCipher(decryptCipher, item.ciphertext)
     }
 }

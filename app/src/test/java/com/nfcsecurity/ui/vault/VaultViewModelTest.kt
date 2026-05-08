@@ -1,6 +1,7 @@
-﻿package com.nfcsecurity.ui.vault
+package com.nfcsecurity.ui.vault
 
 import app.cash.turbine.test
+import com.nfcsecurity.data.crypto.AesGcm
 import com.nfcsecurity.data.db.VaultItemEntity
 import com.nfcsecurity.domain.repository.VaultRepository
 import com.nfcsecurity.util.MainDispatcherRule
@@ -17,6 +18,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.crypto.Cipher
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class VaultViewModelTest {
@@ -25,12 +27,14 @@ class VaultViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var vaultRepository: VaultRepository
+    private lateinit var aesGcm: AesGcm
     private lateinit var viewModel: VaultViewModel
 
     @Before
     fun setUp() {
         vaultRepository = mockk()
-        viewModel = VaultViewModel(vaultRepository)
+        aesGcm = mockk()
+        viewModel = VaultViewModel(vaultRepository, aesGcm)
     }
 
     @Test
@@ -82,13 +86,14 @@ class VaultViewModelTest {
 
     @Test
     fun `addItem calls repository with correct arguments`() = runTest {
-        coJustRun { vaultRepository.addItem(any(), any(), any()) }
+        val cipher = mockk<Cipher>()
+        coJustRun { vaultRepository.addItem(any(), any(), any(), any()) }
 
-        viewModel.addItem("My Password", "password", "s3cr3t")
+        viewModel.addItem("My Password", "password", "s3cr3t", cipher)
         advanceUntilIdle()
 
         coVerify(exactly = 1) {
-            vaultRepository.addItem("My Password", "password", "s3cr3t".toByteArray())
+            vaultRepository.addItem("My Password", "password", any(), cipher)
         }
     }
 

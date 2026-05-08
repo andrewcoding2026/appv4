@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.service
+package com.nfcsecurity.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.nfcsecurity.MainActivity
 import javax.inject.Inject
@@ -23,21 +22,19 @@ class VpnNotificationHelper @Inject constructor(
 ) {
 
     fun createChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val vpnChannel = NotificationChannel(
-                VPN_CHANNEL_ID,
-                "VPN Status",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply { description = "NFC Security VPN connection status" }
+        val vpnChannel = NotificationChannel(
+            VPN_CHANNEL_ID,
+            "VPN Status",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply { description = "NFC Security VPN connection status" }
 
-            val securityChannel = NotificationChannel(
-                SECURITY_CHANNEL_ID,
-                "Security Alerts",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply { description = "Device security warnings" }
+        val securityChannel = NotificationChannel(
+            SECURITY_CHANNEL_ID,
+            "Security Alerts",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply { description = "Device security warnings" }
 
-            notificationManager.createNotificationChannels(listOf(vpnChannel, securityChannel))
-        }
+        notificationManager.createNotificationChannels(listOf(vpnChannel, securityChannel))
     }
 
     fun buildVpnNotification(context: Context, statusText: String): Notification {

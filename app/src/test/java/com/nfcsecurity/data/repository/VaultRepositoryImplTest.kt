@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.data.repository
+package com.nfcsecurity.data.repository
 
 import com.nfcsecurity.data.crypto.AesGcm
 import com.nfcsecurity.data.db.VaultItemDao
@@ -17,6 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import javax.crypto.Cipher
 
 class VaultRepositoryImplTest {
 
@@ -24,14 +25,15 @@ class VaultRepositoryImplTest {
     private lateinit var aesGcm: AesGcm
     private lateinit var repository: VaultRepositoryImpl
 
-    private val fakePlaintext = "super-secret".toByteArray()
+    private val fakePlaintext  = "super-secret".toByteArray()
     private val fakeCiphertext = ByteArray(32) { (it + 10).toByte() }
-    private val fakeIv = ByteArray(12) { it.toByte() }
+    private val fakeIv         = ByteArray(12) { it.toByte() }
+    private val mockCipher     = mockk<Cipher>(relaxed = true)
 
     @Before
     fun setUp() {
-        dao = mockk()
-        aesGcm = mockk()
+        dao        = mockk()
+        aesGcm     = mockk()
         repository = VaultRepositoryImpl(dao, aesGcm)
     }
 
@@ -40,28 +42,28 @@ class VaultRepositoryImplTest {
         val items = listOf(fakeEntity(1L))
         every { dao.observeAll() } returns flowOf(items)
 
-        val flow = repository.observeAll()
+        repository.observeAll()
 
         verify { dao.observeAll() }
     }
 
     @Test
     fun `addItem encrypts plaintext before storing`() = runTest {
-        every { aesGcm.encrypt(fakePlaintext) } returns (fakeCiphertext to fakeIv)
+        every { aesGcm.encryptWithCipher(mockCipher, fakePlaintext) } returns (fakeCiphertext to fakeIv)
         coEvery { dao.insert(any()) } returns 1L
 
-        repository.addItem("label", "password", fakePlaintext)
+        repository.addItem("label", "password", fakePlaintext, mockCipher)
 
-        verify(exactly = 1) { aesGcm.encrypt(fakePlaintext) }
+        verify(exactly = 1) { aesGcm.encryptWithCipher(mockCipher, fakePlaintext) }
     }
 
     @Test
     fun `addItem stores entity with encrypted ciphertext and iv`() = runTest {
-        every { aesGcm.encrypt(fakePlaintext) } returns (fakeCiphertext to fakeIv)
+        every { aesGcm.encryptWithCipher(mockCipher, fakePlaintext) } returns (fakeCiphertext to fakeIv)
         val entitySlot = slot<VaultItemEntity>()
         coEvery { dao.insert(capture(entitySlot)) } returns 1L
 
-        repository.addItem("My Label", "TOTP", fakePlaintext)
+        repository.addItem("My Label", "TOTP", fakePlaintext, mockCipher)
 
         val stored = entitySlot.captured
         assertEquals("My Label", stored.label)
@@ -72,10 +74,10 @@ class VaultRepositoryImplTest {
 
     @Test
     fun `addItem returns generated id from dao`() = runTest {
-        every { aesGcm.encrypt(any()) } returns (fakeCiphertext to fakeIv)
+        every { aesGcm.encryptWithCipher(any(), any()) } returns (fakeCiphertext to fakeIv)
         coEvery { dao.insert(any()) } returns 99L
 
-        val id = repository.addItem("label", "type", fakePlaintext)
+        val id = repository.addItem("label", "type", fakePlaintext, mockCipher)
 
         assertEquals(99L, id)
     }
@@ -93,29 +95,29 @@ class VaultRepositoryImplTest {
     fun `decryptItem returns null when item not found`() = runTest {
         coEvery { dao.getById(999L) } returns null
 
-        val result = repository.decryptItem(999L)
+        val result = repository.decryptItem(999L, mockCipher)
 
         assertNull(result)
     }
 
     @Test
-    fun `decryptItem decrypts stored ciphertext with stored iv`() = runTest {
+    fun `decryptItem decrypts stored ciphertext with authenticated cipher`() = runTest {
         val entity = fakeEntity(1L)
         coEvery { dao.getById(1L) } returns entity
-        every { aesGcm.decrypt(entity.ciphertext, entity.iv) } returns fakePlaintext
+        every { aesGcm.decryptWithCipher(mockCipher, entity.ciphertext) } returns fakePlaintext
 
-        val result = repository.decryptItem(1L)
+        val result = repository.decryptItem(1L, mockCipher)
 
         assertArrayEquals(fakePlaintext, result)
     }
 
     @Test
-    fun `decryptItem returns null when aesGcm decrypt returns null (corrupted data)`() = runTest {
+    fun `decryptItem returns null when aesGcm decryptWithCipher returns null (corrupted data)`() = runTest {
         val entity = fakeEntity(1L)
         coEvery { dao.getById(1L) } returns entity
-        every { aesGcm.decrypt(any(), any()) } returns null
+        every { aesGcm.decryptWithCipher(any(), any()) } returns null
 
-        val result = repository.decryptItem(1L)
+        val result = repository.decryptItem(1L, mockCipher)
 
         assertNull(result)
     }

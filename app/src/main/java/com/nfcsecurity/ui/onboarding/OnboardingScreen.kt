@@ -1,7 +1,6 @@
-﻿package com.nfcsecurity.ui.onboarding
+package com.nfcsecurity.ui.onboarding
 
 import android.Manifest
-import android.app.Activity
 import android.net.VpnService
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -54,6 +53,10 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
         ActivityResultContracts.RequestPermission()
     ) { /* proceed regardless */ }
 
+    val vpnLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { /* VPN consent result — proceed regardless */ }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,9 +72,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
             2 -> PermissionsPage(
                 onRequestVpn = {
                     val intent = VpnService.prepare(context)
-                    if (intent != null) {
-                        (context as? Activity)?.startActivityForResult(intent, 0)
-                    }
+                    if (intent != null) vpnLauncher.launch(intent)
                 },
                 onRequestNotifications = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

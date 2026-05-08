@@ -1,8 +1,9 @@
-﻿package com.nfcsecurity.data.repository
+package com.nfcsecurity.data.repository
 
 import android.content.pm.ApplicationInfo
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Environment
 import com.nfcsecurity.data.local.MalwareBlocklist
 import com.nfcsecurity.data.local.ScanResultLocalDataSource
@@ -30,9 +31,15 @@ class ScanRepositoryImpl @Inject constructor(
         val hits = mutableListOf<MalwareHit>()
 
         // ── 1. Installed-package analysis ────────────────────────────────────
-        val packages = context.packageManager.getInstalledPackages(
-            PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS
-        )
+        val flags = PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS
+        val packages = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getInstalledPackages(
+                PackageManager.PackageInfoFlags.of(flags.toLong())
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getInstalledPackages(flags)
+        }
 
         packages.forEach { pkg ->
             val pkgName   = pkg.packageName

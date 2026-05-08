@@ -216,19 +216,35 @@ class NfcVpnService : VpnService() {
 
     /**
      * Walks the QNAME labels in a DNS query payload and returns the fully-qualified domain name.
-     * DNS payload layout: 12-byte header, then QNAME (length-prefixed labels, terminated by 0x00).
+     * Handles RFC 1035 §4.1.4 compression pointers (0xC0 prefix): the top two bits signal a
+     * pointer; the remaining 14 bits are a byte offset from the start of the DNS message.
+     * A jump counter caps pointer-following at 10 hops to prevent infinite loops on malformed input.
      */
     private fun parseDnsDomain(dns: ByteArray): String? {
         if (dns.size < 13) return null
-        val sb  = StringBuilder()
-        var pos = 12   // skip 12-byte DNS header
+        val sb   = StringBuilder()
+        var pos  = 12   // skip 12-byte DNS header
+        var hops = 0
+
         while (pos < dns.size) {
-            val labelLen = dns[pos].toInt() and 0xFF
-            if (labelLen == 0) break
-            if (pos + labelLen >= dns.size) return null
-            if (sb.isNotEmpty()) sb.append('.')
-            sb.append(String(dns, pos + 1, labelLen, Charsets.US_ASCII))
-            pos += labelLen + 1
+            val b = dns[pos].toInt() and 0xFF
+            when {
+                b == 0 -> break
+                (b and 0xC0) == 0xC0 -> {
+                    // RFC 1035 compression pointer: next byte gives low 8 bits of offset
+                    if (pos + 1 >= dns.size || ++hops > 10) return null
+                    val ptr = ((b and 0x3F) shl 8) or (dns[pos + 1].toInt() and 0xFF)
+                    if (ptr >= pos) return null  // forward pointers could loop; reject
+                    pos = ptr
+                }
+                else -> {
+                    val labelLen = b
+                    if (pos + labelLen >= dns.size) return null
+                    if (sb.isNotEmpty()) sb.append('.')
+                    sb.append(String(dns, pos + 1, labelLen, Charsets.US_ASCII))
+                    pos += labelLen + 1
+                }
+            }
         }
         return sb.toString().lowercase().ifEmpty { null }
     }

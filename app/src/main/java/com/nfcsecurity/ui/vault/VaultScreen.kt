@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Note
 import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -65,6 +66,7 @@ import com.nfcsecurity.ui.theme.NFCSecuritySurface
 import com.nfcsecurity.ui.theme.NFCSecurityText
 import com.nfcsecurity.ui.theme.NFCSecurityTextDim
 import com.nfcsecurity.ui.theme.NFCSecurityType
+import javax.crypto.Cipher
 
 @Composable
 fun VaultScreen(viewModel: VaultViewModel, onBack: () -> Unit) {
@@ -103,8 +105,11 @@ fun VaultScreen(viewModel: VaultViewModel, onBack: () -> Unit) {
         is VaultUiState.Unlocked -> {
             UnlockedView(
                 items = s.items,
-                onAdd = viewModel::addItem,
-                onDelete = viewModel::deleteItem,
+                prepareEncryptCipher = viewModel::prepareEncryptCipher,
+                prepareDecryptCipher = viewModel::prepareDecryptCipher,
+                onAddItem = viewModel::addItem,
+                onDeleteItem = viewModel::deleteItem,
+                onDecryptItem = viewModel::decryptItem,
                 onLock = { viewModel.lock(); onBack() },
                 onBack = onBack
             )
@@ -162,12 +167,17 @@ private fun LockedView(isUnlocking: Boolean, onUnlock: () -> Unit, onBack: () ->
 @Composable
 private fun UnlockedView(
     items: List<VaultItemEntity>,
-    onAdd: (String, String, String) -> Unit,
-    onDelete: (Long) -> Unit,
+    prepareEncryptCipher: () -> Cipher?,
+    prepareDecryptCipher: (ByteArray) -> Cipher?,
+    onAddItem: (String, String, String, Cipher) -> Unit,
+    onDeleteItem: (Long) -> Unit,
+    onDecryptItem: (Long, Cipher, (ByteArray?) -> Unit) -> Unit,
     onLock: () -> Unit,
     onBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     var showAddDialog by remember { mutableStateOf(false) }
+    var revealedSecret by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         containerColor = NFCSecurityBg,
@@ -209,7 +219,32 @@ private fun UnlockedView(
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(items, key = { it.id }) { item ->
-                        VaultItemRow(item = item, onDelete = { onDelete(item.id) })
+                        VaultItemRow(
+                            item = item,
+                            onDelete = { onDeleteItem(item.id) },
+                            onReveal = {
+                                val activity = context as? AppCompatActivity ?: return@VaultItemRow
+                                val cipher = prepareDecryptCipher(item.iv) ?: return@VaultItemRow
+                                val executor = ContextCompat.getMainExecutor(context)
+                                BiometricPrompt(activity, executor,
+                                    object : BiometricPrompt.AuthenticationCallback() {
+                                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                                            val authCipher = result.cryptoObject?.cipher ?: return
+                                            onDecryptItem(item.id, authCipher) { bytes ->
+                                                revealedSecret = bytes?.toString(Charsets.UTF_8)
+                                            }
+                                        }
+                                    }
+                                ).authenticate(
+                                    BiometricPrompt.PromptInfo.Builder()
+                                        .setTitle("Reveal Secret")
+                                        .setSubtitle("Authenticate to decrypt \"${item.label}\"")
+                                        .setNegativeButtonText("Cancel")
+                                        .build(),
+                                    BiometricPrompt.CryptoObject(cipher)
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -219,16 +254,47 @@ private fun UnlockedView(
     if (showAddDialog) {
         AddItemDialog(
             onConfirm = { label, type, secret ->
-                onAdd(label, type, secret)
                 showAddDialog = false
+                val activity = context as? AppCompatActivity ?: return@AddItemDialog
+                val cipher = prepareEncryptCipher() ?: return@AddItemDialog
+                val executor = ContextCompat.getMainExecutor(context)
+                BiometricPrompt(activity, executor,
+                    object : BiometricPrompt.AuthenticationCallback() {
+                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                            val authCipher = result.cryptoObject?.cipher ?: return
+                            onAddItem(label, type, secret, authCipher)
+                        }
+                    }
+                ).authenticate(
+                    BiometricPrompt.PromptInfo.Builder()
+                        .setTitle("Confirm Save")
+                        .setSubtitle("Authenticate to encrypt and save this vault item")
+                        .setNegativeButtonText("Cancel")
+                        .build(),
+                    BiometricPrompt.CryptoObject(cipher)
+                )
             },
             onDismiss = { showAddDialog = false }
+        )
+    }
+
+    if (revealedSecret != null) {
+        AlertDialog(
+            onDismissRequest = { revealedSecret = null },
+            containerColor = NFCSecuritySurface,
+            title = { Text("Secret", color = NFCSecurityText) },
+            text = { Text(revealedSecret ?: "", color = NFCSecurityText, style = NFCSecurityType.bodyMedium) },
+            confirmButton = {
+                TextButton(onClick = { revealedSecret = null }) {
+                    Text("Close", color = NFCSecurityAccent)
+                }
+            }
         )
     }
 }
 
 @Composable
-private fun VaultItemRow(item: VaultItemEntity, onDelete: () -> Unit) {
+private fun VaultItemRow(item: VaultItemEntity, onDelete: () -> Unit, onReveal: () -> Unit) {
     NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -252,8 +318,13 @@ private fun VaultItemRow(item: VaultItemEntity, onDelete: () -> Unit) {
                     NFCSecurityPill(label = item.type, tone = PillTone.ACCENT)
                 }
             }
-            IconButton(onClick = onDelete) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = NFCSecurityCrit)
+            Row {
+                IconButton(onClick = onReveal) {
+                    Icon(Icons.Default.Visibility, contentDescription = "Reveal secret", tint = NFCSecurityTextDim)
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = NFCSecurityCrit)
+                }
             }
         }
     }
