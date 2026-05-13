@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.service
+package com.nfcsecurity.service
 
 import android.content.Intent
 import android.net.VpnService
@@ -285,6 +285,9 @@ class NfcVpnService : VpnService() {
             val buf = ByteArray(512)
             val rp  = DatagramPacket(buf, buf.size)
             socket.receive(rp)
+            // Guard against a delayed response from a prior timed-out query being delivered
+            // as the answer to this one: verify the DNS Transaction ID (bytes 0–1) matches.
+            if (rp.length < 2 || buf[0] != dnsPayload[0] || buf[1] != dnsPayload[1]) return null
             buildIpUdpPacket(
                 srcIp   = ipToBytes(VIRTUAL_DNS),
                 dstIp   = clientIp,
@@ -333,7 +336,9 @@ class NfcVpnService : VpnService() {
         pkt[20] = (srcPort ushr 8).toByte(); pkt[21] = (srcPort and 0xFF).toByte()
         pkt[22] = (dstPort ushr 8).toByte(); pkt[23] = (dstPort and 0xFF).toByte()
         pkt[24] = (udpLen ushr 8).toByte();  pkt[25] = (udpLen and 0xFF).toByte()
-        // [26..27] UDP checksum = 0 (disabled, valid for IPv4)
+        // [26..27] UDP checksum = 0. RFC 768 permits omitting UDP checksums for IPv4; the OS
+        // TUN/loopback path eliminates physical-media bit-flip risk. Trade-off: corruption in
+        // the UDP header or payload on this local path goes undetected end-to-end.
 
         payload.copyInto(pkt, 28)
         return pkt

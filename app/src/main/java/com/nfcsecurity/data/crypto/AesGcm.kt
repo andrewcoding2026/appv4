@@ -14,7 +14,10 @@ import javax.inject.Singleton
 
 @Singleton
 class AesGcm @Inject constructor() {
-    // v2: setUserAuthenticationRequired=true, validity=-1 (biometric required per-use via CryptoObject)
+    // Vault-specific key: setUserAuthenticationRequired=true with per-use biometric (validity=0/−1
+    // via CryptoObject). Intentionally separate from the general-purpose key in
+    // KeystoreCryptoDataSource ("nfc_security_aes_key"), which omits user-auth to allow
+    // background access. This key is invalidated on new biometric enrolment.
     private val keyAlias = "nfc_security_vault_v2"
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").also { it.load(null) }
 
@@ -31,7 +34,7 @@ class AesGcm @Inject constructor() {
             .setUserAuthenticationRequired(true)
             .setInvalidatedByBiometricEnrollment(true)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            builder.setUserAuthenticationParameters(-1, KeyProperties.AUTH_BIOMETRIC_STRONG)
+            builder.setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
         } else {
             @Suppress("DEPRECATION")
             builder.setUserAuthenticationValidityDurationSeconds(-1)

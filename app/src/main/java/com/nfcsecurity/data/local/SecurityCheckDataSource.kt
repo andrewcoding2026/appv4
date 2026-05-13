@@ -20,6 +20,16 @@ class SecurityCheckDataSource @Inject constructor(
     private val keyguardManager: KeyguardManager
 ) {
 
+    /**
+     * Check 1 — Root Detection (static heuristic, bypass-susceptible).
+     *
+     * Enumerates well-known su binary paths and inspects Build.TAGS for "test-keys".
+     * Limitation: advanced root management frameworks (e.g. Magisk with Zygisk + DenyList)
+     * hide su binaries and patch Build.TAGS at the system call level, rendering this check
+     * ineffective against a determined attacker. A production implementation must treat this
+     * as a best-effort signal only and rely on the Google Play Integrity API (check 7,
+     * checkPlayIntegrity) for authoritative device-integrity attestation.
+     */
     suspend fun checkIsRooted(): SecurityCheckResult = withContext(Dispatchers.IO) {
         val suPaths = listOf(
             "/system/bin/su",
@@ -118,6 +128,32 @@ class SecurityCheckDataSource @Inject constructor(
             passed = hasPlayStore,
             severity = Severity.MEDIUM,
             detail = if (hasPlayStore) "Google Play Store present (Play Protect available)" else "Google Play Store not found"
+        )
+    }
+
+    /**
+     * Check 7 — Google Play Integrity API (NOT YET IMPLEMENTED).
+     *
+     * Intended to call IntegrityManagerFactory.create(context).requestIntegrityToken() and
+     * decode the verdict to verify: (a) the app binary has not been tampered with, (b) the
+     * device passes the MEETS_BASIC_INTEGRITY / MEETS_DEVICE_INTEGRITY verdict, and (c) the
+     * licence was obtained via Google Play.
+     *
+     * The dependency (com.google.android.play:integrity:1.6.0) is declared in
+     * libs.versions.toml and included in app/build.gradle.kts. Integration is deferred
+     * because the API requires a server-side nonce generation endpoint and a Google Cloud
+     * project with the Play Integrity API enabled — infrastructure outside the scope of
+     * the current thesis prototype. This stub keeps the check enumerable and explicitly
+     * marks it as an open development item so the absence is visible at runtime and in
+     * code review rather than silently missing.
+     */
+    @Suppress("FunctionOnlyReturningConstant")
+    suspend fun checkPlayIntegrity(): SecurityCheckResult = withContext(Dispatchers.IO) {
+        SecurityCheckResult(
+            checkName = "Play Integrity",
+            passed = false,
+            severity = Severity.HIGH,
+            detail = "Play Integrity API not yet integrated — verdict unavailable (open development item)"
         )
     }
 }

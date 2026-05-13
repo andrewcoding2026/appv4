@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.domain.usecase.session
+package com.nfcsecurity.domain.usecase.session
 
 import android.util.Base64
 import com.nfcsecurity.data.local.KeystoreCryptoDataSource
@@ -23,7 +23,7 @@ class CreateSessionUseCase @Inject constructor(
             FreemiumState.Expired -> now
         }
         val token = UUID.randomUUID().toString()
-        val signatureInput = "$token$now$expiresAt".toByteArray()
+        val signatureInput = "$token:$now:$expiresAt".toByteArray()
         val signature = Base64.encodeToString(crypto.sign(signatureInput), Base64.NO_WRAP)
         val sessionToken = SessionToken(
             token = token,

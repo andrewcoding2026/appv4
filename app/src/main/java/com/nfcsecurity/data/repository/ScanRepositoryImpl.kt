@@ -131,20 +131,20 @@ class ScanRepositoryImpl @Inject constructor(
                 scannedFiles++
                 val ext = ".${file.extension.lowercase()}"
 
-                when {
-                    ext == ".apk" -> {
+                when (ext) {
+                    ".apk" -> {
                         // Hash-check side-loaded APKs in Downloads
                         if (file.length() in 1..(50 * 1024 * 1024L)) {
                             val hash = sha256(file)
-                            if (hash != null && hash in MalwareBlocklist.KNOWN_MALWARE_HASHES) {
-                                hits += MalwareHit(
+                            hits += if (hash != null && hash in MalwareBlocklist.KNOWN_MALWARE_HASHES) {
+                                MalwareHit(
                                     packageNameOrPath = file.absolutePath,
                                     hitType  = MalwareHit.HitType.SIDELOADED_APK_HASH,
                                     detail   = "APK hash matches known malware — do not install: ${file.name}",
                                     severity = Severity.CRITICAL
                                 )
                             } else {
-                                hits += MalwareHit(
+                                MalwareHit(
                                     packageNameOrPath = file.absolutePath,
                                     hitType  = MalwareHit.HitType.SUSPICIOUS_EXTENSION,
                                     detail   = "Unverified APK in Downloads — confirm source before installing: ${file.name}",
@@ -153,13 +153,29 @@ class ScanRepositoryImpl @Inject constructor(
                             }
                         }
                     }
-                    ext in MalwareBlocklist.SUSPICIOUS_EXTENSIONS -> {
-                        hits += MalwareHit(
-                            packageNameOrPath = file.absolutePath,
-                            hitType  = MalwareHit.HitType.SUSPICIOUS_EXTENSION,
-                            detail   = "Suspicious file type '$ext' found in Downloads: ${file.name}",
-                            severity = Severity.MEDIUM
-                        )
+                    in MalwareBlocklist.SUSPICIOUS_EXTENSIONS -> {
+                        // Hash-check files within the 50 MB threshold; flag by extension only
+                        // for larger files (hash scan skipped — documented limitation).
+                        val hash = if (file.length() in 1..(50 * 1024 * 1024L)) sha256(file) else null
+                        if (hash != null && hash in MalwareBlocklist.KNOWN_MALWARE_HASHES) {
+                            hits += MalwareHit(
+                                packageNameOrPath = file.absolutePath,
+                                hitType  = MalwareHit.HitType.SIDELOADED_APK_HASH,
+                                detail   = "File SHA-256 matches known malware signature ($hash): ${file.name}",
+                                severity = Severity.CRITICAL
+                            )
+                        } else {
+                            hits += MalwareHit(
+                                packageNameOrPath = file.absolutePath,
+                                hitType  = MalwareHit.HitType.SUSPICIOUS_EXTENSION,
+                                detail   = buildString {
+                                    append("Suspicious file type '$ext' found in Downloads: ${file.name}")
+                                    if (file.length() > 50 * 1024 * 1024L)
+                                        append(" (exceeds 50 MB hash-scan threshold — hash not verified)")
+                                },
+                                severity = Severity.MEDIUM
+                            )
+                        }
                     }
                 }
             }

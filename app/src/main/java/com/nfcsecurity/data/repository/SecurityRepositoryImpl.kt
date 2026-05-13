@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.data.repository
+package com.nfcsecurity.data.repository
 
 import com.nfcsecurity.data.local.SecurityCheckDataSource
 import com.nfcsecurity.domain.model.SecurityCheckResult
@@ -24,7 +24,8 @@ class SecurityRepositoryImpl @Inject constructor(
             checkDataSource.checkScreenLock(),
             checkDataSource.checkBiometricAvailability(),
             checkDataSource.checkUnknownSourceApps(),
-            checkDataSource.checkGooglePlayProtect()
+            checkDataSource.checkGooglePlayProtect(),
+            checkDataSource.checkPlayIntegrity()
         )
         val score = calculateScore(checks)
         return SecurityHealthScore(score = score, checks = checks, calculatedAt = System.currentTimeMillis())

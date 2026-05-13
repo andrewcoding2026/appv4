@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -28,14 +30,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nfcsecurity.ui.components.NFCSecurityCard
 import com.nfcsecurity.ui.theme.NFCSecurityAccent
 import com.nfcsecurity.ui.theme.NFCSecurityBg
@@ -43,11 +44,13 @@ import com.nfcsecurity.ui.theme.NFCSecurityBorder
 import com.nfcsecurity.ui.theme.NFCSecurityText
 import com.nfcsecurity.ui.theme.NFCSecurityTextDim
 import com.nfcsecurity.ui.theme.NFCSecurityType
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
-    val page by viewModel.page.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val pagerState = rememberPagerState(pageCount = { viewModel.totalPages })
+    val scope = rememberCoroutineScope()
 
     val notifLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -66,34 +69,37 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
-        when (page) {
-            0 -> WelcomePage()
-            1 -> HowItWorksPage()
-            2 -> PermissionsPage(
-                onRequestVpn = {
-                    val intent = VpnService.prepare(context)
-                    if (intent != null) vpnLauncher.launch(intent)
-                },
-                onRequestNotifications = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.weight(1f)
+        ) { page ->
+            when (page) {
+                0 -> WelcomePage()
+                1 -> HowItWorksPage()
+                2 -> PermissionsPage(
+                    onRequestVpn = {
+                        val intent = VpnService.prepare(context)
+                        if (intent != null) vpnLauncher.launch(intent)
+                    },
+                    onRequestNotifications = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        PageIndicator(current = page, total = viewModel.totalPages)
+        PageIndicator(current = pagerState.currentPage, total = viewModel.totalPages)
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (page > 0) {
+            if (pagerState.currentPage > 0) {
                 OutlinedButton(
-                    onClick = viewModel::onPrev,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = NFCSecurityTextDim)
                 ) {
@@ -102,8 +108,8 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
             }
             Button(
                 onClick = {
-                    if (page < viewModel.totalPages - 1) {
-                        viewModel.onNext()
+                    if (pagerState.currentPage < viewModel.totalPages - 1) {
+                        scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                     } else {
                         viewModel.finish(onFinish)
                     }
@@ -111,7 +117,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) {
-                Text(if (page < viewModel.totalPages - 1) "Next" else "Get Started")
+                Text(if (pagerState.currentPage < viewModel.totalPages - 1) "Next" else "Get Started")
             }
         }
         Spacer(modifier = Modifier.height(24.dp))

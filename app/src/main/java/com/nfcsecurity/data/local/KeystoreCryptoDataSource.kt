@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.data.local
+package com.nfcsecurity.data.local
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -27,6 +27,11 @@ class KeystoreCryptoDataSource @Inject constructor() {
         KeyStore.getInstance(KEYSTORE_PROVIDER).also { it.load(null) }
     }
 
+    // setUserAuthenticationRequired is intentionally absent here. This key protects general
+    // app data (scan records, session tokens) that must be readable without user interaction
+    // (e.g. background WorkManager jobs). The vault key in AesGcm uses a separate alias
+    // ("nfc_security_vault_v2") with setUserAuthenticationRequired(true) and per-use biometric
+    // authentication via CryptoObject — these are architecturally distinct trust boundaries.
     private fun getOrCreateAesKey(): SecretKey {
         return if (keyStore.containsAlias(AES_KEY_ALIAS)) {
             (keyStore.getEntry(AES_KEY_ALIAS, null) as KeyStore.SecretKeyEntry).secretKey

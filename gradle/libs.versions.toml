@@ -26,7 +26,6 @@ room = "2.8.4"
 datastore = "1.1.1"
 billing = "6.2.1"
 googleFonts = "1.6.7"
-accompanistPager = "0.34.0"
 appcompat = "1.7.0"
 
 [libraries]
@@ -64,7 +63,6 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 datastore-prefs = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 compose-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
-accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanistPager" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }

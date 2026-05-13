@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity.data.repository
+package com.nfcsecurity.data.repository
 
 import android.util.Base64
 import com.nfcsecurity.data.local.EncryptedPreferencesDataSource
@@ -18,6 +18,9 @@ class SessionRepositoryImpl @Inject constructor(
     private val crypto: KeystoreCryptoDataSource
 ) : SessionRepository {
 
+    // Session payload is AES-256-GCM encrypted under a Keystore-backed key. On a rooted
+    // device the backing store can be tampered or the Keystore call intercepted; see
+    // ValidateSessionUseCase for the full PoC-scope limitation and production guidance.
     override suspend fun saveSession(token: SessionToken) = withContext(Dispatchers.IO) {
         val json = """{"token":"${token.token}","createdAt":${token.createdAt},"expiresAt":${token.expiresAt},"signature":"${token.signature}"}"""
         val (iv, ciphertext) = crypto.encrypt(json.toByteArray())
