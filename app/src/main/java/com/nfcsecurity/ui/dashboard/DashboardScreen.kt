@@ -36,8 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nfcsecurity.R
 import com.nfcsecurity.domain.model.FreemiumState
 import com.nfcsecurity.domain.model.VpnState
 import com.nfcsecurity.ui.components.NFCSecurityCard
@@ -65,10 +67,10 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
         else -> NFCSecurityCrit
     }
     val heroLabel = when {
-        overallScore == null -> "Scanning..."
-        overallScore >= 80 -> "SECURE"
-        overallScore >= 60 -> "AT RISK"
-        else -> "CRITICAL"
+        overallScore == null -> stringResource(R.string.status_scanning)
+        overallScore >= 80 -> stringResource(R.string.status_secure)
+        overallScore >= 60 -> stringResource(R.string.status_at_risk)
+        else -> stringResource(R.string.status_critical)
     }
 
     Column(
@@ -79,8 +81,8 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         NFCSecurityTopBar(
-            title = "NFC Secure Shield",
-            subtitle = "Security Dashboard",
+            title = stringResource(R.string.app_name),
+            subtitle = stringResource(R.string.dashboard_title),
         )
 
         HeroStatusCard(
@@ -91,25 +93,25 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("MODULES", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+        Text(stringResource(R.string.module_nfc_title).uppercase(), style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
 
         ModuleRow(
             icon = Icons.Default.NearMe,
-            title = "NFC Sentinel",
-            statusLabel = if (state.nfcEnabled) "Active" else "Off",
+            title = stringResource(R.string.module_nfc_title),
+            statusLabel = if (state.nfcEnabled) stringResource(R.string.status_active) else stringResource(R.string.status_off),
             tone = if (state.nfcEnabled) PillTone.SAFE else PillTone.DEFAULT,
             onClick = { onNavigate(NavRoutes.NFC_SENTINEL) }
         )
         Spacer(modifier = Modifier.height(8.dp))
         ModuleRow(
             icon = Icons.Default.Wifi,
-            title = "Tunnel",
+            title = stringResource(R.string.module_vpn_title),
             statusLabel = when (state.vpnState) {
-                is VpnState.Connected -> "Connected"
-                is VpnState.Connecting -> "Connecting"
-                is VpnState.Disconnected -> "Off"
-                is VpnState.Error -> "Error"
+                is VpnState.Connected -> stringResource(R.string.status_connected)
+                is VpnState.Connecting -> stringResource(R.string.status_connecting)
+                is VpnState.Disconnected -> stringResource(R.string.status_off)
+                is VpnState.Error -> stringResource(R.string.status_error)
             },
             tone = when (state.vpnState) {
                 is VpnState.Connected -> PillTone.SAFE
@@ -121,28 +123,28 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
         ModuleRow(
             icon = Icons.Default.Shield,
-            title = "Antimalware",
-            statusLabel = "Tap to scan",
+            title = stringResource(R.string.module_scan_title),
+            statusLabel = stringResource(R.string.status_tap_to_scan),
             tone = PillTone.ACCENT,
             onClick = { onNavigate(NavRoutes.SCAN) }
         )
         Spacer(modifier = Modifier.height(8.dp))
         ModuleRow(
             icon = Icons.Default.Lock,
-            title = "Vault",
-            statusLabel = "Sealed",
+            title = stringResource(R.string.module_vault_title),
+            statusLabel = stringResource(R.string.status_sealed),
             tone = PillTone.DEFAULT,
             onClick = { onNavigate(NavRoutes.VAULT) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("QUICK ACTIONS", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+        Text(stringResource(R.string.quick_actions), style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            QuickChip("Run Scan", Modifier.weight(1f)) { onNavigate(NavRoutes.SCAN) }
-            QuickChip("Tunnel", Modifier.weight(1f)) { onNavigate(NavRoutes.TUNNEL) }
-            QuickChip("Vault", Modifier.weight(1f)) { onNavigate(NavRoutes.VAULT) }
+            QuickChip(stringResource(R.string.action_run_scan), Modifier.weight(1f)) { onNavigate(NavRoutes.SCAN) }
+            QuickChip(stringResource(R.string.action_tunnel), Modifier.weight(1f)) { onNavigate(NavRoutes.TUNNEL) }
+            QuickChip(stringResource(R.string.action_vault), Modifier.weight(1f)) { onNavigate(NavRoutes.VAULT) }
         }
 
         if (state.sparklineData.isNotEmpty()) {
@@ -155,7 +157,7 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
             val days = TimeUnit.MILLISECONDS.toDays((state.freemiumState as FreemiumState.Trial).remainingMs)
             NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    "Trial · $days day(s) remaining",
+                    stringResource(R.string.trial_remaining, days.toInt()),
                     style = NFCSecurityType.bodySmall,
                     color = NFCSecurityWarn
                 )
@@ -181,11 +183,11 @@ private fun HeroStatusCard(score: Int?, heroColor: Color, heroLabel: String) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text("Device Status", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+                Text(stringResource(R.string.device_status), style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(heroLabel, style = NFCSecurityType.headlineLarge, color = heroColor)
                 if (score != null) {
-                    Text("Score $score / 100", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
+                    Text(stringResource(R.string.score_label, score), style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                 }
             }
             Box(
@@ -250,7 +252,7 @@ private fun QuickChip(label: String, modifier: Modifier = Modifier, onClick: () 
 @Composable
 private fun ThreatSparkline(data: List<Int>, color: Color) {
     Column {
-        Text("THREAT ACTIVITY · 24H", style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
+        Text(stringResource(R.string.threat_activity_24h), style = NFCSecurityType.labelSmall, color = NFCSecurityTextDim)
         Spacer(modifier = Modifier.height(8.dp))
         NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Canvas(modifier = Modifier

@@ -26,8 +26,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nfcsecurity.R
 import com.nfcsecurity.domain.model.FreemiumState
 import com.nfcsecurity.ui.components.NFCSecurityCard
 import com.nfcsecurity.ui.components.NFCSecurityPill
@@ -51,14 +53,14 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NFCSecurityTopBar(title = "NFC Secure Shield Pro", subtitle = "Unlock full protection")
+        NFCSecurityTopBar(title = stringResource(R.string.unlock_pro), subtitle = stringResource(R.string.pro_subtitle))
 
         Icon(Icons.Default.Shield, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(64.dp))
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Go Pro", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.go_pro), style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Unlimited access to all NFC Secure Shield security modules.",
+            stringResource(R.string.pro_desc),
             style = NFCSecurityType.bodyMedium,
             color = NFCSecurityTextDim,
             textAlign = TextAlign.Center
@@ -67,16 +69,16 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
         if (state.freemiumState is FreemiumState.Trial) {
             Spacer(modifier = Modifier.height(12.dp))
             val days = TimeUnit.MILLISECONDS.toDays((state.freemiumState as FreemiumState.Trial).remainingMs)
-            NFCSecurityPill("$days days remaining", PillTone.WARN)
+            NFCSecurityPill(stringResource(R.string.trial_remaining, days.toInt()), PillTone.WARN)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         listOf(
-            "NFC Sentinel — unlimited scan history",
-            "Vault — unlimited encrypted items",
-            "Integrity — real-time Play Integrity checks",
-            "Tunnel — DNS filter + tracker block"
+            stringResource(R.string.feature_nfc),
+            stringResource(R.string.feature_vault),
+            stringResource(R.string.feature_integrity),
+            stringResource(R.string.feature_tunnel)
         ).forEach { feature ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -93,8 +95,8 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         listOf(
-            "Monthly" to "€ 0,10 / month",
-            "Yearly" to "€ 0,99 / year  · Best value"
+            stringResource(R.string.monthly) to stringResource(R.string.price_monthly),
+            stringResource(R.string.yearly) to stringResource(R.string.price_yearly)
         ).forEach { (label, price) ->
             NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onUnlockPremium) {
                 Row(
@@ -106,7 +108,7 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
                         Text(label, style = NFCSecurityType.titleMedium)
                         Text(price, style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
                     }
-                    NFCSecurityPill("Select", PillTone.ACCENT)
+                    NFCSecurityPill(stringResource(R.string.select), PillTone.ACCENT)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -124,13 +126,13 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
             ) {
                 Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Unlock NFC Secure Shield Pro")
+                Text(stringResource(R.string.unlock_pro))
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = { }) {
-            Text("Restore Purchases", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
+            Text(stringResource(R.string.restore_purchases), style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
         }
         Spacer(modifier = Modifier.height(16.dp))
     }

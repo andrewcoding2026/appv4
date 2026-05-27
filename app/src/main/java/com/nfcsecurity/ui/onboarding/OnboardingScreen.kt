@@ -35,8 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nfcsecurity.R
 import com.nfcsecurity.ui.components.NFCSecurityCard
 import com.nfcsecurity.ui.theme.NFCSecurityAccent
 import com.nfcsecurity.ui.theme.NFCSecurityBg
@@ -103,7 +105,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = NFCSecurityTextDim)
                 ) {
-                    Text("Back")
+                    Text(stringResource(R.string.back))
                 }
             }
             Button(
@@ -117,7 +119,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel, onFinish: () -> Unit) {
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
             ) {
-                Text(if (pagerState.currentPage < viewModel.totalPages - 1) "Next" else "Get Started")
+                Text(if (pagerState.currentPage < viewModel.totalPages - 1) stringResource(R.string.next) else stringResource(R.string.get_started))
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -141,11 +143,10 @@ private fun WelcomePage() {
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Welcome to NFC Secure Shield", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.welcome_title), style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            "Your always-on mobile security guardian. " +
-                "NFC protection, encrypted vault, VPN tunnel, and integrity monitoring — all offline.",
+            stringResource(R.string.welcome_desc),
             style = NFCSecurityType.bodyMedium,
             color = NFCSecurityTextDim,
             textAlign = TextAlign.Center
@@ -156,13 +157,13 @@ private fun WelcomePage() {
 @Composable
 private fun HowItWorksPage() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("How NFC Secure Shield Works", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.how_it_works_title), style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(32.dp))
         listOf(
-            Triple(Icons.Default.NearMe, "NFC Sentinel", "Detects skimmers and rogue NFC interactions in real time."),
-            Triple(Icons.Default.Shield, "Tunnel", "Routes DNS locally to block trackers — your IP never changes."),
-            Triple(Icons.Default.Lock, "Vault", "AES-256 encrypted storage for passwords and secrets."),
-            Triple(Icons.Default.Security, "Integrity", "15-minute continuous device integrity checks."),
+            Triple(Icons.Default.NearMe, stringResource(R.string.module_nfc_title), stringResource(R.string.nfc_sentinel_desc)),
+            Triple(Icons.Default.Shield, stringResource(R.string.module_vpn_title), stringResource(R.string.tunnel_desc)),
+            Triple(Icons.Default.Lock, stringResource(R.string.module_vault_title), stringResource(R.string.vault_desc)),
+            Triple(Icons.Default.Security, stringResource(R.string.integrity_desc), stringResource(R.string.integrity_desc)),
         ).forEach { (icon, title, desc) ->
             ModuleCard(icon = icon, title = title, desc = desc)
             Spacer(modifier = Modifier.height(8.dp))
@@ -187,17 +188,16 @@ private fun ModuleCard(icon: ImageVector, title: String, desc: String) {
 @Composable
 private fun PermissionsPage(onRequestVpn: () -> Unit, onRequestNotifications: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Permissions", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.permissions_title), style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "NFC Secure Shield needs a few permissions to protect your device.",
+            stringResource(R.string.permissions_desc),
             style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         listOf(
-            Triple("NFC", "Read NFC tags to detect skimming attempts.", null as (() -> Unit)?),
-            Triple("VPN Consent", "Create a local tunnel for DNS filtering. Your IP doesn't change.", onRequestVpn),
-           // Triple("Notifications", "Alert you when threats are detected.", onRequestNotifications),
+            Triple(stringResource(R.string.perm_nfc_title), stringResource(R.string.perm_nfc_desc), null as (() -> Unit)?),
+            Triple(stringResource(R.string.perm_vpn_title), stringResource(R.string.perm_vpn_desc), onRequestVpn),
         ).forEach { (title, desc, action) ->
             PermissionRow(title = title, desc = desc, onGrant = action)
             Spacer(modifier = Modifier.height(8.dp))
@@ -221,9 +221,9 @@ private fun PermissionRow(title: String, desc: String, onGrant: (() -> Unit)?) {
                 Button(
                     onClick = onGrant,
                     colors = ButtonDefaults.buttonColors(containerColor = NFCSecurityAccent)
-                ) { Text("Allow") }
+                ) { Text(stringResource(R.string.perm_allow)) }
             } else {
-                Text("Auto", style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
+                Text(stringResource(R.string.perm_auto), style = NFCSecurityType.bodySmall, color = NFCSecurityTextDim)
             }
         }
     }
