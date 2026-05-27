@@ -190,7 +190,7 @@ private fun PermissionsPage(onRequestVpn: () -> Unit, onRequestNotifications: ()
         Text("Permissions", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "NFCSecurity needs a few permissions to protect your device.",
+            "NFC Secure Shield needs a few permissions to protect your device.",
             style = NFCSecurityType.bodyMedium, color = NFCSecurityTextDim, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))

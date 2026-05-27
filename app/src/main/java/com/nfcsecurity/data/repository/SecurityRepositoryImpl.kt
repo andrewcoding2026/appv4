@@ -17,16 +17,28 @@ class SecurityRepositoryImpl @Inject constructor(
 ) : SecurityRepository {
 
     override suspend fun runAllChecks(): SecurityHealthScore {
-        val checks = listOf(
-            checkDataSource.checkIsRooted(),
-            checkDataSource.checkDeveloperOptions(),
-            checkDataSource.checkUsbDebugging(),
-            checkDataSource.checkScreenLock(),
-            checkDataSource.checkBiometricAvailability(),
-            checkDataSource.checkUnknownSourceApps(),
-            checkDataSource.checkGooglePlayProtect(),
-            checkDataSource.checkPlayIntegrity()
+        val checks = mutableListOf<SecurityCheckResult>()
+        
+        val checkFunctions = listOf(
+            suspend { checkDataSource.checkIsRooted() },
+            suspend { checkDataSource.checkDeveloperOptions() },
+            suspend { checkDataSource.checkUsbDebugging() },
+            suspend { checkDataSource.checkScreenLock() },
+            suspend { checkDataSource.checkBiometricAvailability() },
+            suspend { checkDataSource.checkUnknownSourceApps() },
+            suspend { checkDataSource.checkGooglePlayProtect() },
+            suspend { checkDataSource.checkPlayIntegrity() }
         )
+
+        for (checkFn in checkFunctions) {
+            try {
+                checks.add(checkFn())
+            } catch (e: Exception) {
+                // Silently catch and add a failed check result to avoid crashing the whole app
+                checks.add(SecurityCheckResult("Security Check", false, Severity.LOW, "Check failed due to internal error"))
+            }
+        }
+
         val score = calculateScore(checks)
         return SecurityHealthScore(score = score, checks = checks, calculatedAt = System.currentTimeMillis())
     }

@@ -48,8 +48,8 @@ class NfcVpnService : VpnService() {
     }
 
     companion object {
-        const val ACTION_START = "com.nfcsecurity.vpn.START"
-        const val ACTION_STOP  = "com.nfcsecurity.vpn.STOP"
+        const val ACTION_START = "com.NFCSecureShield.vpn.START"
+        const val ACTION_STOP  = "com.NFCSecureShield.vpn.STOP"
         private const val TUN_ADDRESS   = "10.8.0.1"
         private const val TUN_SUBNET    = "10.8.0.0"
         private const val VIRTUAL_DNS   = "10.8.0.2"
