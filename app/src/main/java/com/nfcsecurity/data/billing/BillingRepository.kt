@@ -67,11 +67,11 @@ class BillingRepository @Inject constructor(
     private fun queryProducts() {
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId("NFCSecurity_pro_monthly")
+                .setProductId("NFCSecureShield_pro_monthly_v2")
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build(),
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId("NFCSecurity_pro_yearly")
+                .setProductId("NFCSecureShield_pro_yearly_v2")
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build()
         )

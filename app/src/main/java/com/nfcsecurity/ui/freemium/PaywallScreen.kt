@@ -51,14 +51,14 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NFCSecurityTopBar(title = "NFCSecurity Pro", subtitle = "Unlock full protection")
+        NFCSecurityTopBar(title = "NFC Secure Shield Pro", subtitle = "Unlock full protection")
 
         Icon(Icons.Default.Shield, contentDescription = null, tint = NFCSecurityAccent, modifier = Modifier.size(64.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Text("Go Pro", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Unlimited access to all NFCSecurity security modules.",
+            "Unlimited access to all NFC Secure Shield security modules.",
             style = NFCSecurityType.bodyMedium,
             color = NFCSecurityTextDim,
             textAlign = TextAlign.Center
@@ -93,8 +93,8 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         listOf(
-            "Monthly" to "$2.99 / month",
-            "Yearly" to "$19.99 / year  · Best value"
+            "Monthly" to "0.10 / month",
+            "Yearly" to "0.99 / year  · Best value"
         ).forEach { (label, price) ->
             NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onUnlockPremium) {
                 Row(
@@ -124,7 +124,7 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
             ) {
                 Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Unlock NFCSecurity Pro")
+                Text("Unlock NFC Secure Shield Pro")
             }
         }
 

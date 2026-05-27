@@ -1,4 +1,4 @@
-package com.nfcsecurity.service
+﻿package com.nfcsecurity.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -26,7 +26,7 @@ class VpnNotificationHelper @Inject constructor(
             VPN_CHANNEL_ID,
             "VPN Status",
             NotificationManager.IMPORTANCE_LOW
-        ).apply { description = "NFC Security VPN connection status" }
+        ).apply { description = "NFC Secure Shield VPN connection status" }
 
         val securityChannel = NotificationChannel(
             SECURITY_CHANNEL_ID,
@@ -45,7 +45,7 @@ class VpnNotificationHelper @Inject constructor(
         )
         return NotificationCompat.Builder(context, VPN_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_lock_lock)
-            .setContentTitle("NFC Security VPN")
+            .setContentTitle("NFC Secure Shield VPN")
             .setContentText(statusText)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

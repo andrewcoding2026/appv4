@@ -141,7 +141,7 @@ fun TunnelScreen(viewModel: TunnelViewModel, onBack: () -> Unit) {
 
         NFCSecurityCard(modifier = Modifier.fillMaxWidth()) {
             Text(
-                "NFC Security runs a local VPN. Your IP address and country do not change.",
+                "NFC Secure Shield runs a local VPN. Your IP address and country do not change.",
                 style = NFCSecurityType.bodySmall,
                 color = NFCSecurityTextDim,
                 textAlign = TextAlign.Center,

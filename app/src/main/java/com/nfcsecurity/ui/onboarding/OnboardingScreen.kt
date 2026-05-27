@@ -1,4 +1,4 @@
-package com.nfcsecurity.ui.onboarding
+﻿package com.nfcsecurity.ui.onboarding
 
 import android.Manifest
 import android.net.VpnService
@@ -141,7 +141,7 @@ private fun WelcomePage() {
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Welcome to NFC Security", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text("Welcome to NFC Secure Shield", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Your always-on mobile security guardian. " +
@@ -156,7 +156,7 @@ private fun WelcomePage() {
 @Composable
 private fun HowItWorksPage() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("How NFC Security Works", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
+        Text("How NFC Secure Shield Works", style = NFCSecurityType.headlineLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(32.dp))
         listOf(
             Triple(Icons.Default.NearMe, "NFC Sentinel", "Detects skimmers and rogue NFC interactions in real time."),

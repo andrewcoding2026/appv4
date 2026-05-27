@@ -1,4 +1,4 @@
-package com.nfcsecurity.service
+﻿package com.nfcsecurity.service
 
 import android.content.Intent
 import android.net.VpnService
@@ -126,7 +126,7 @@ class NfcVpnService : VpnService() {
             .addRoute(TUN_SUBNET, 24)
             // Override system DNS so all resolver queries land on our virtual DNS IP.
             .addDnsServer(VIRTUAL_DNS)
-            .setSession("NFC Security VPN")
+            .setSession("NFC Secure Shield VPN")
             .establish()
 
     private fun stopTunnel() {
@@ -206,7 +206,7 @@ class NfcVpnService : VpnService() {
             notificationHelper.showSecurityAlert(
                 this,
                 "Malicious domain blocked",
-                "DNS query for \"$domain\" was blocked by NFC Security VPN."
+                "DNS query for \"$domain\" was blocked by NFC Secure Shield VPN."
             )
             return buildNxdomainResponse(clientIp, clientPort, dnsPayload)
         }

@@ -79,7 +79,7 @@ fun DashboardScreen(state: DashboardUiState, onNavigate: (String) -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         NFCSecurityTopBar(
-            title = "NFC Security",
+            title = "NFC Secure Shield",
             subtitle = "Security Dashboard",
         )
 
