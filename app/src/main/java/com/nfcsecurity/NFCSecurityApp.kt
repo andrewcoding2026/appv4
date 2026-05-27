@@ -24,7 +24,7 @@ class NFCSecurityApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        WorkManager.initialize(this, workManagerConfiguration)
+        // WorkManager is initialized via the provider in AndroidManifest.xml
         scheduleSecurityWorker()
     }
 

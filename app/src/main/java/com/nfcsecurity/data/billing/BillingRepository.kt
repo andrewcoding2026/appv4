@@ -88,7 +88,7 @@ class BillingRepository @Inject constructor(
         billingClient.queryPurchasesAsync(params) { _, purchases ->
             val hasPro = purchases.any { p ->
                 p.purchaseState == Purchase.PurchaseState.PURCHASED &&
-                    p.products.any { it.startsWith("NFCSecurity_pro") }
+                    p.products.any { it.startsWith("NFCSecureShield_pro") }
             }
             _isPro.value = hasPro
             if (hasPro) scope.launch { prefs.setEntitlement("pro") }
