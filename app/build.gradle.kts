@@ -13,7 +13,7 @@ android {
         applicationId = "com.NFCSecureShield"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
+        versionCode = 7
         versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -21,10 +21,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("/home/ubuntu/nfc_secure_shield.jks")
-            storePassword = "password123"
+            storeFile = file("/home/ubuntu/nfc_secure_shield_final.jks")
+            storePassword = "Alba7777"
             keyAlias = "nfc_secure_shield"
-            keyPassword = "password123"
+            keyPassword = "Alba7777"
         }
     }
 
