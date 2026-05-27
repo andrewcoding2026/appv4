@@ -10,7 +10,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.nfcsecurity"
+        applicationId = "com.NFCSecureShield"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
