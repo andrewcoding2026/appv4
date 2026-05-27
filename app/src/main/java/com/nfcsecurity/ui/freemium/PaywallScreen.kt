@@ -93,8 +93,8 @@ fun PaywallScreen(state: PaywallUiState, onUnlockPremium: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         listOf(
-            "Monthly" to "0.10 / month",
-            "Yearly" to "0.99 / year  · Best value"
+            "Monthly" to "€ 0,10 / month",
+            "Yearly" to "€ 0,99 / year  · Best value"
         ).forEach { (label, price) ->
             NFCSecurityCard(modifier = Modifier.fillMaxWidth(), onClick = onUnlockPremium) {
                 Row(

@@ -19,8 +19,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("/home/ubuntu/nfc_secure_shield.jks")
+            storePassword = "password123"
+            keyAlias = "nfc_secure_shield"
+            keyPassword = "password123"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true

@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NFC Security"
+rootProject.name = "NFC Secure Shield"
 include(":app")

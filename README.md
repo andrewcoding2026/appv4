@@ -1,4 +1,4 @@
-# NFC Security & Privacy Guardian 🛡️
+# NFC Secure Shield 🛡️
 
 An advanced, offline-first Android security suite focused on NFC threat detection, privacy-preserving network filtering, and hardware-backed data encryption. Developed as a high-integrity Proof of Concept (PoC).
 
