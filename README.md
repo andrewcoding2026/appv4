@@ -4,7 +4,7 @@ An advanced, offline-first Android security suite focused on NFC threat detectio
 
 ---
 
-## 🌟 Key Modules
+## 🌟 Key Modules  
 
 ### 📡 NFC Sentinel
 Real-time monitoring of the NFC field to detect unauthorized tag interactions or potential skimmers.
