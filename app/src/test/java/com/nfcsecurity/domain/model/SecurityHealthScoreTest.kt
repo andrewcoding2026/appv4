@@ -1,4 +1,4 @@
-﻿package com.NFC.SecureShield.domain.model
+﻿package com.NFC.SecureShield.free.domain.model
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

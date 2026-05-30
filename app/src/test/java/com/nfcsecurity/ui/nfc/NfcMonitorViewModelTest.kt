@@ -1,11 +1,11 @@
-﻿package com.NFC.SecureShield.ui.nfc
+﻿package com.NFC.SecureShield.free.ui.nfc
 
 import app.cash.turbine.test
-import com.NFC.SecureShield.domain.model.NfcTagInfo
-import com.NFC.SecureShield.domain.model.NfcTagType
-import com.NFC.SecureShield.domain.repository.NfcRepository
-import com.NFC.SecureShield.domain.usecase.nfc.ObserveNfcStateUseCase
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.domain.model.NfcTagInfo
+import com.NFC.SecureShield.free.domain.model.NfcTagType
+import com.NFC.SecureShield.free.domain.repository.NfcRepository
+import com.NFC.SecureShield.free.domain.usecase.nfc.ObserveNfcStateUseCase
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.every

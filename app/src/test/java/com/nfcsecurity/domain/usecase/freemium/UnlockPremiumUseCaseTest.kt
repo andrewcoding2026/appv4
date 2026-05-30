@@ -1,6 +1,6 @@
-﻿package com.NFC.SecureShield.domain.usecase.freemium
+﻿package com.NFC.SecureShield.free.domain.usecase.freemium
 
-import com.NFC.SecureShield.domain.repository.FreemiumRepository
+import com.NFC.SecureShield.free.domain.repository.FreemiumRepository
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.mockk

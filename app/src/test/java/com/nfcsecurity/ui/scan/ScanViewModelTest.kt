@@ -1,10 +1,10 @@
-﻿package com.NFC.SecureShield.ui.scan
+﻿package com.NFC.SecureShield.free.ui.scan
 
 import app.cash.turbine.test
-import com.NFC.SecureShield.domain.model.ScanReport
-import com.NFC.SecureShield.domain.usecase.scan.ClearAppCacheUseCase
-import com.NFC.SecureShield.domain.usecase.scan.ScanForMalwareUseCase
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.domain.model.ScanReport
+import com.NFC.SecureShield.free.domain.usecase.scan.ClearAppCacheUseCase
+import com.NFC.SecureShield.free.domain.usecase.scan.ScanForMalwareUseCase
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

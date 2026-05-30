@@ -1,10 +1,10 @@
-package com.NFC.SecureShield.ui.vault
+package com.NFC.SecureShield.free.ui.vault
 
 import app.cash.turbine.test
-import com.NFC.SecureShield.data.crypto.AesGcm
-import com.NFC.SecureShield.data.db.VaultItemEntity
-import com.NFC.SecureShield.domain.repository.VaultRepository
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.data.crypto.AesGcm
+import com.NFC.SecureShield.free.data.db.VaultItemEntity
+import com.NFC.SecureShield.free.domain.repository.VaultRepository
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.every

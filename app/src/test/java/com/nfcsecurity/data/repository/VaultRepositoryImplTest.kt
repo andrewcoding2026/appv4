@@ -1,8 +1,8 @@
-package com.NFC.SecureShield.data.repository
+package com.NFC.SecureShield.free.data.repository
 
-import com.NFC.SecureShield.data.crypto.AesGcm
-import com.NFC.SecureShield.data.db.VaultItemDao
-import com.NFC.SecureShield.data.db.VaultItemEntity
+import com.NFC.SecureShield.free.data.crypto.AesGcm
+import com.NFC.SecureShield.free.data.db.VaultItemDao
+import com.NFC.SecureShield.free.data.db.VaultItemEntity
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify

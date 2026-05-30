@@ -6,22 +6,22 @@
 }
 
 android {
-    namespace = "com.NFC.SecureShield"
+    namespace = "com.NFC.SecureShield.free"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.NFCSecureShield"
+        applicationId = "com.NFC.SecureShield.free"
         minSdk = 26
         targetSdk = 36
-        versionCode = 12
-        versionName = "2.0.0"
+        versionCode = 15
+        versionName = "2.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("/home/ubuntu/nuova_firma/nfc_shield_free.jks")
+            storeFile = file("/home/ubuntu/firma_utente/nfc_shield_free.jks")
             storePassword = "Manus2026"
             keyAlias = "nfc_free_key"
             keyPassword = "Manus2026"

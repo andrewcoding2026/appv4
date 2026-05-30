@@ -1,12 +1,12 @@
-﻿package com.NFC.SecureShield.ui.vpn
+﻿package com.NFC.SecureShield.free.ui.vpn
 
 import android.content.Intent
 import app.cash.turbine.test
-import com.NFC.SecureShield.domain.model.VpnState
-import com.NFC.SecureShield.domain.usecase.vpn.ObserveVpnStateUseCase
-import com.NFC.SecureShield.domain.usecase.vpn.StartVpnUseCase
-import com.NFC.SecureShield.domain.usecase.vpn.StopVpnUseCase
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.domain.model.VpnState
+import com.NFC.SecureShield.free.domain.usecase.vpn.ObserveVpnStateUseCase
+import com.NFC.SecureShield.free.domain.usecase.vpn.StartVpnUseCase
+import com.NFC.SecureShield.free.domain.usecase.vpn.StopVpnUseCase
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk

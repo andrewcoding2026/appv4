@@ -1,4 +1,4 @@
-﻿package com.NFC.SecureShield.util
+﻿package com.NFC.SecureShield.free.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

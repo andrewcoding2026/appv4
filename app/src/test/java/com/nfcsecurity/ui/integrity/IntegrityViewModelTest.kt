@@ -1,10 +1,10 @@
-﻿package com.NFC.SecureShield.ui.integrity
+﻿package com.NFC.SecureShield.free.ui.integrity
 
 import app.cash.turbine.test
-import com.NFC.SecureShield.domain.model.SecurityHealthScore
-import com.NFC.SecureShield.domain.usecase.security.ObserveSecurityHealthUseCase
-import com.NFC.SecureShield.domain.usecase.security.RunSecurityChecksUseCase
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.domain.model.SecurityHealthScore
+import com.NFC.SecureShield.free.domain.usecase.security.ObserveSecurityHealthUseCase
+import com.NFC.SecureShield.free.domain.usecase.security.RunSecurityChecksUseCase
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

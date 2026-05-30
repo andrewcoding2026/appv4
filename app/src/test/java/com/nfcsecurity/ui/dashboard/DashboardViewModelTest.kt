@@ -1,16 +1,16 @@
-﻿package com.NFC.SecureShield.ui.dashboard
+﻿package com.NFC.SecureShield.free.ui.dashboard
 
 import app.cash.turbine.test
-import com.NFC.SecureShield.data.db.EventEntity
-import com.NFC.SecureShield.domain.model.FreemiumState
-import com.NFC.SecureShield.domain.model.SecurityHealthScore
-import com.NFC.SecureShield.domain.model.VpnState
-import com.NFC.SecureShield.domain.repository.EventRepository
-import com.NFC.SecureShield.domain.usecase.freemium.ObserveFreemiumStateUseCase
-import com.NFC.SecureShield.domain.usecase.nfc.ObserveNfcStateUseCase
-import com.NFC.SecureShield.domain.usecase.security.ObserveSecurityHealthUseCase
-import com.NFC.SecureShield.domain.usecase.vpn.ObserveVpnStateUseCase
-import com.NFC.SecureShield.util.MainDispatcherRule
+import com.NFC.SecureShield.free.data.db.EventEntity
+import com.NFC.SecureShield.free.domain.model.FreemiumState
+import com.NFC.SecureShield.free.domain.model.SecurityHealthScore
+import com.NFC.SecureShield.free.domain.model.VpnState
+import com.NFC.SecureShield.free.domain.repository.EventRepository
+import com.NFC.SecureShield.free.domain.usecase.freemium.ObserveFreemiumStateUseCase
+import com.NFC.SecureShield.free.domain.usecase.nfc.ObserveNfcStateUseCase
+import com.NFC.SecureShield.free.domain.usecase.security.ObserveSecurityHealthUseCase
+import com.NFC.SecureShield.free.domain.usecase.vpn.ObserveVpnStateUseCase
+import com.NFC.SecureShield.free.util.MainDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
