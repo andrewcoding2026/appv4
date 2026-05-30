@@ -1,6 +1,6 @@
-﻿package com.nfcsecurity.domain.usecase.scan
+﻿package com.NFC.SecureShield.domain.usecase.scan
 
-import com.nfcsecurity.domain.repository.ScanRepository
+import com.NFC.SecureShield.domain.repository.ScanRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

@@ -1,7 +1,7 @@
-﻿package com.nfcsecurity.domain.usecase.freemium
+﻿package com.NFC.SecureShield.domain.usecase.freemium
 
-import com.nfcsecurity.domain.model.FreemiumState
-import com.nfcsecurity.domain.repository.FreemiumRepository
+import com.NFC.SecureShield.domain.model.FreemiumState
+import com.NFC.SecureShield.domain.repository.FreemiumRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

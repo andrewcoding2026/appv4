@@ -1,11 +1,11 @@
-﻿package com.nfcsecurity.domain.usecase.session
+﻿package com.NFC.SecureShield.domain.usecase.session
 
 import android.util.Base64
-import com.nfcsecurity.data.local.KeystoreCryptoDataSource
-import com.nfcsecurity.domain.model.FreemiumState
-import com.nfcsecurity.domain.model.SessionToken
-import com.nfcsecurity.domain.repository.SessionRepository
-import com.nfcsecurity.domain.usecase.freemium.GetFreemiumStateUseCase
+import com.NFC.SecureShield.data.local.KeystoreCryptoDataSource
+import com.NFC.SecureShield.domain.model.FreemiumState
+import com.NFC.SecureShield.domain.model.SessionToken
+import com.NFC.SecureShield.domain.repository.SessionRepository
+import com.NFC.SecureShield.domain.usecase.freemium.GetFreemiumStateUseCase
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify

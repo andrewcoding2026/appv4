@@ -1,4 +1,4 @@
-﻿package com.nfcsecurity
+﻿package com.NFC.SecureShield
 
 import org.junit.Test
 

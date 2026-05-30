@@ -1,16 +1,16 @@
-﻿package com.nfcsecurity.ui.dashboard
+﻿package com.NFC.SecureShield.ui.dashboard
 
 import app.cash.turbine.test
-import com.nfcsecurity.data.db.EventEntity
-import com.nfcsecurity.domain.model.FreemiumState
-import com.nfcsecurity.domain.model.SecurityHealthScore
-import com.nfcsecurity.domain.model.VpnState
-import com.nfcsecurity.domain.repository.EventRepository
-import com.nfcsecurity.domain.usecase.freemium.ObserveFreemiumStateUseCase
-import com.nfcsecurity.domain.usecase.nfc.ObserveNfcStateUseCase
-import com.nfcsecurity.domain.usecase.security.ObserveSecurityHealthUseCase
-import com.nfcsecurity.domain.usecase.vpn.ObserveVpnStateUseCase
-import com.nfcsecurity.util.MainDispatcherRule
+import com.NFC.SecureShield.data.db.EventEntity
+import com.NFC.SecureShield.domain.model.FreemiumState
+import com.NFC.SecureShield.domain.model.SecurityHealthScore
+import com.NFC.SecureShield.domain.model.VpnState
+import com.NFC.SecureShield.domain.repository.EventRepository
+import com.NFC.SecureShield.domain.usecase.freemium.ObserveFreemiumStateUseCase
+import com.NFC.SecureShield.domain.usecase.nfc.ObserveNfcStateUseCase
+import com.NFC.SecureShield.domain.usecase.security.ObserveSecurityHealthUseCase
+import com.NFC.SecureShield.domain.usecase.vpn.ObserveVpnStateUseCase
+import com.NFC.SecureShield.util.MainDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

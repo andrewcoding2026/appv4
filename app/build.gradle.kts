@@ -6,25 +6,25 @@
 }
 
 android {
-    namespace = "com.nfcsecurity"
+    namespace = "com.NFC.SecureShield"
     compileSdk = 36
 
     defaultConfig {
         applicationId = "com.NFCSecureShield"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.5"
+        versionCode = 12
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("/home/ubuntu/nfc_secure_shield_final.jks")
-            storePassword = "Alba7777"
-            keyAlias = "nfc_secure_shield"
-            keyPassword = "Alba7777"
+            storeFile = file("/home/ubuntu/nuova_firma/nfc_shield_free.jks")
+            storePassword = "Manus2026"
+            keyAlias = "nfc_free_key"
+            keyPassword = "Manus2026"
         }
     }
 
@@ -81,7 +81,6 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.datastore.prefs)
-    implementation(libs.billing.ktx)
     implementation(libs.compose.google.fonts)
     implementation(libs.appcompat)
     testImplementation(libs.junit)

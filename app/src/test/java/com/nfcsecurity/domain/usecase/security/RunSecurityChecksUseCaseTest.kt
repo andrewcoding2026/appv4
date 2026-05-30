@@ -1,7 +1,7 @@
-﻿package com.nfcsecurity.domain.usecase.security
+﻿package com.NFC.SecureShield.domain.usecase.security
 
-import com.nfcsecurity.domain.model.SecurityHealthScore
-import com.nfcsecurity.domain.repository.SecurityRepository
+import com.NFC.SecureShield.domain.model.SecurityHealthScore
+import com.NFC.SecureShield.domain.repository.SecurityRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

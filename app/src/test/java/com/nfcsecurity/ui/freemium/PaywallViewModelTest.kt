@@ -1,10 +1,10 @@
-﻿package com.nfcsecurity.ui.freemium
+﻿package com.NFC.SecureShield.ui.freemium
 
 import app.cash.turbine.test
-import com.nfcsecurity.domain.model.FreemiumState
-import com.nfcsecurity.domain.usecase.freemium.ObserveFreemiumStateUseCase
-import com.nfcsecurity.domain.usecase.freemium.UnlockPremiumUseCase
-import com.nfcsecurity.util.MainDispatcherRule
+import com.NFC.SecureShield.domain.model.FreemiumState
+import com.NFC.SecureShield.domain.usecase.freemium.ObserveFreemiumStateUseCase
+import com.NFC.SecureShield.domain.usecase.freemium.UnlockPremiumUseCase
+import com.NFC.SecureShield.util.MainDispatcherRule
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.every
